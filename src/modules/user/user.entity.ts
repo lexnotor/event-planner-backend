@@ -8,6 +8,7 @@ import {
     Relation,
 } from "typeorm";
 import { PhotoEntity } from "../photo/photo.entity";
+import { PostEntity } from "../post/post.entity";
 
 @Entity("user")
 class UserEntity extends DefaultEntity {
@@ -36,13 +37,16 @@ class UserEntity extends DefaultEntity {
     social: Relation<SocialEntity[]>;
 
     @OneToMany(() => ContactEntity, (contact) => contact.user_id)
-    contact: Relation<ContactEntity[]>;
+    contacts: Relation<ContactEntity[]>;
 
     @OneToMany(() => AddressEntity, (address) => address.user_id)
     address: Relation<AddressEntity[]>;
 
     @OneToMany(() => UserPhotoEntity, (user_photo) => user_photo.user_id)
-    user_photo: Relation<UserPhotoEntity[]>;
+    photos: Relation<UserPhotoEntity[]>;
+
+    @OneToMany(() => PostEntity, (user_post) => user_post.user_id)
+    posts: Relation<PostEntity[]>;
 }
 
 @Entity("secret")
@@ -50,7 +54,7 @@ class SecretEntity extends DefaultEntity {
     @Column("varchar")
     content: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity, (user) => user.secret)
     @JoinColumn({ name: "user_id" })
     user_id: Relation<UserEntity>;
 }
@@ -63,7 +67,7 @@ class SocialEntity extends DefaultEntity {
     @Column("varchar")
     type: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity, (user) => user.social)
     @JoinColumn({ name: "user_id" })
     user_id: Relation<UserEntity>;
 }
@@ -76,7 +80,7 @@ class ContactEntity extends DefaultEntity {
     @Column("varchar")
     type: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity, (user) => user.contacts)
     @JoinColumn({ name: "user_id" })
     user_id: Relation<UserEntity>;
 }
@@ -89,7 +93,7 @@ class AddressEntity extends DefaultEntity {
     @Column("varchar")
     type: string;
 
-    @ManyToOne(() => UserEntity, undefined)
+    @ManyToOne(() => UserEntity, (user) => user.address)
     @JoinColumn({ name: "user_id" })
     user_id: Relation<UserEntity>;
 }
@@ -99,11 +103,11 @@ class UserPhotoEntity {
     @Column("varchar")
     type: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity, (user) => user.photos)
     @JoinColumn({ name: "user_id" })
     user_id: Relation<UserEntity>;
 
-    @ManyToOne(() => PhotoEntity)
+    @ManyToOne(() => PhotoEntity, (photo) => photo.user)
     @JoinColumn({ name: "photo_id" })
     photo_id: Relation<PhotoEntity>;
 }

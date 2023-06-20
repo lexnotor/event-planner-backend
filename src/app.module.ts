@@ -1,12 +1,24 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { DbconfigService } from "./modules/dbconfig/dbconfig.service";
+import { PhotoModule } from "./modules/photo/photo.module";
 import { PostModule } from "./modules/post/post.module";
 import { UserModule } from "./modules/user/user.module";
-import { PhotoModule } from './modules/photo/photo.module';
 
 @Module({
-    imports: [UserModule, PostModule, PhotoModule],
+    imports: [
+        ConfigModule.forRoot(),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            useClass: DbconfigService,
+        }),
+        UserModule,
+        PostModule,
+        PhotoModule,
+    ],
     controllers: [AppController],
     providers: [AppService],
 })
