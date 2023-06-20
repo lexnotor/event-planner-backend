@@ -99,7 +99,7 @@ class AddressEntity extends DefaultEntity {
 }
 
 @Entity("user_photo")
-class UserPhotoEntity {
+class UserPhotoEntity extends DefaultEntity {
     @Column("varchar")
     type: string;
 
@@ -107,7 +107,7 @@ class UserPhotoEntity {
     @JoinColumn({ name: "user_id" })
     user_id: Relation<UserEntity>;
 
-    @ManyToOne(() => PhotoEntity, (photo) => photo.user)
+    @ManyToOne(() => PhotoEntity)
     @JoinColumn({ name: "photo_id" })
     photo_id: Relation<PhotoEntity>;
 }

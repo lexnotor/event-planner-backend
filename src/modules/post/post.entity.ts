@@ -10,7 +10,7 @@ import {
 import { UserEntity } from "../user/user.entity";
 import { PhotoEntity } from "../photo/photo.entity";
 
-@Entity("photo")
+@Entity("post")
 class PostEntity extends DefaultEntity {
     @Column("varchar")
     author: string;
@@ -21,8 +21,8 @@ class PostEntity extends DefaultEntity {
     @Column("varchar")
     public: string;
 
-    @Column("varchar")
-    date: string;
+    @Column("timestamp")
+    date: Date;
 
     @Column("varchar")
     likes: string;
@@ -39,7 +39,7 @@ class PostEntity extends DefaultEntity {
 }
 
 @Entity("post_photo")
-class PostPhotoEntity {
+class PostPhotoEntity extends DefaultEntity {
     @ManyToOne(() => PostEntity)
     @JoinColumn({ name: "post_id" })
     post_id: Relation<PostEntity>;

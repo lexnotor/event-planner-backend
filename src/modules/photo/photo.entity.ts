@@ -1,6 +1,5 @@
 import { DefaultEntity } from "@/utils/entity";
-import { Column, Entity, ManyToOne, Relation } from "typeorm";
-import { UserPhotoEntity } from "../user/user.entity";
+import { Column, Entity } from "typeorm";
 
 @Entity("photo")
 class PhotoEntity extends DefaultEntity {
@@ -13,17 +12,14 @@ class PhotoEntity extends DefaultEntity {
     @Column("varchar")
     public: string;
 
-    @Column("varchar")
-    date: string;
+    @Column("timestamp")
+    date: Date;
 
     @Column("varchar")
     comment: string;
 
     @Column("varchar")
     tags: string;
-
-    @ManyToOne(() => UserPhotoEntity, (user_photo) => user_photo.photo_id)
-    user: Relation<UserPhotoEntity>;
 }
 
 export { PhotoEntity };
