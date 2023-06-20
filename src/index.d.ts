@@ -61,8 +61,8 @@ export interface PostInfo extends DefaultInfo {
     date?: Date;
     likes?: string;
     tags?: string;
-    user?: string;
-    post_photo?: PostPhotoInfo;
+    user?: UserInfo;
+    post_photo?: PostPhotoInfo[];
 }
 
 export interface PostPhotoInfo extends DefaultInfo {
