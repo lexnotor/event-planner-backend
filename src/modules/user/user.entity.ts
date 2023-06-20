@@ -30,22 +30,22 @@ class UserEntity extends DefaultEntity {
     @Column("varchar")
     types: string;
 
-    @OneToMany(() => SecretEntity, (secret) => secret.user_id)
+    @OneToMany(() => SecretEntity, (secret) => secret.user)
     secret: Relation<SecretEntity[]>;
 
-    @OneToMany(() => SocialEntity, (social) => social.user_id)
+    @OneToMany(() => SocialEntity, (social) => social.user)
     social: Relation<SocialEntity[]>;
 
-    @OneToMany(() => ContactEntity, (contact) => contact.user_id)
+    @OneToMany(() => ContactEntity, (contact) => contact.user)
     contacts: Relation<ContactEntity[]>;
 
-    @OneToMany(() => AddressEntity, (address) => address.user_id)
+    @OneToMany(() => AddressEntity, (address) => address.user)
     address: Relation<AddressEntity[]>;
 
-    @OneToMany(() => UserPhotoEntity, (user_photo) => user_photo.user_id)
+    @OneToMany(() => UserPhotoEntity, (user_photo) => user_photo.user)
     photos: Relation<UserPhotoEntity[]>;
 
-    @OneToMany(() => PostEntity, (user_post) => user_post.user_id)
+    @OneToMany(() => PostEntity, (user_post) => user_post.user)
     posts: Relation<PostEntity[]>;
 }
 
@@ -56,7 +56,7 @@ class SecretEntity extends DefaultEntity {
 
     @ManyToOne(() => UserEntity, (user) => user.secret)
     @JoinColumn({ name: "user_id" })
-    user_id: Relation<UserEntity>;
+    user: Relation<UserEntity>;
 }
 
 @Entity("social")
@@ -69,7 +69,7 @@ class SocialEntity extends DefaultEntity {
 
     @ManyToOne(() => UserEntity, (user) => user.social)
     @JoinColumn({ name: "user_id" })
-    user_id: Relation<UserEntity>;
+    user: Relation<UserEntity>;
 }
 
 @Entity("contact")
@@ -82,7 +82,7 @@ class ContactEntity extends DefaultEntity {
 
     @ManyToOne(() => UserEntity, (user) => user.contacts)
     @JoinColumn({ name: "user_id" })
-    user_id: Relation<UserEntity>;
+    user: Relation<UserEntity>;
 }
 
 @Entity("address")
@@ -95,7 +95,7 @@ class AddressEntity extends DefaultEntity {
 
     @ManyToOne(() => UserEntity, (user) => user.address)
     @JoinColumn({ name: "user_id" })
-    user_id: Relation<UserEntity>;
+    user: Relation<UserEntity>;
 }
 
 @Entity("user_photo")
@@ -105,11 +105,11 @@ class UserPhotoEntity extends DefaultEntity {
 
     @ManyToOne(() => UserEntity, (user) => user.photos)
     @JoinColumn({ name: "user_id" })
-    user_id: Relation<UserEntity>;
+    user: Relation<UserEntity>;
 
     @ManyToOne(() => PhotoEntity)
     @JoinColumn({ name: "photo_id" })
-    photo_id: Relation<PhotoEntity>;
+    photo: Relation<PhotoEntity>;
 }
 
 export {

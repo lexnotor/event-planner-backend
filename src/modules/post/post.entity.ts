@@ -32,9 +32,9 @@ class PostEntity extends DefaultEntity {
 
     @ManyToOne(() => UserEntity)
     @JoinColumn({ name: "user_id" })
-    user_id: Relation<UserEntity>;
+    user: Relation<UserEntity>;
 
-    @OneToMany(() => PostPhotoEntity, (post_photo) => post_photo.post_id)
+    @OneToMany(() => PostPhotoEntity, (post_photo) => post_photo.post)
     post_photo: Relation<PostPhotoEntity[]>;
 }
 
@@ -42,11 +42,11 @@ class PostEntity extends DefaultEntity {
 class PostPhotoEntity extends DefaultEntity {
     @ManyToOne(() => PostEntity)
     @JoinColumn({ name: "post_id" })
-    post_id: Relation<PostEntity>;
+    post: Relation<PostEntity>;
 
     @ManyToOne(() => PhotoEntity)
     @JoinColumn({ name: "photo_id" })
-    photo_id: Relation<PhotoEntity>;
+    photo: Relation<PhotoEntity>;
 }
 
 export { PostEntity, PostPhotoEntity };
