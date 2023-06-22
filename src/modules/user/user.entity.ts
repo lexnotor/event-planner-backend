@@ -30,22 +30,30 @@ class UserEntity extends DefaultEntity {
     @Column("varchar")
     types: string;
 
-    @OneToMany(() => SecretEntity, (secret) => secret.user)
+    @OneToMany(() => SecretEntity, (secret) => secret.user, { cascade: true })
     secret: Relation<SecretEntity[]>;
 
-    @OneToMany(() => SocialEntity, (social) => social.user)
+    @OneToMany(() => SocialEntity, (social) => social.user, { cascade: true })
     social: Relation<SocialEntity[]>;
 
-    @OneToMany(() => ContactEntity, (contact) => contact.user)
+    @OneToMany(() => ContactEntity, (contact) => contact.user, {
+        cascade: true,
+    })
     contacts: Relation<ContactEntity[]>;
 
-    @OneToMany(() => AddressEntity, (address) => address.user)
+    @OneToMany(() => AddressEntity, (address) => address.user, {
+        cascade: true,
+    })
     address: Relation<AddressEntity[]>;
 
-    @OneToMany(() => UserPhotoEntity, (user_photo) => user_photo.user)
+    @OneToMany(() => UserPhotoEntity, (user_photo) => user_photo.user, {
+        cascade: true,
+    })
     photos: Relation<UserPhotoEntity[]>;
 
-    @OneToMany(() => PostEntity, (user_post) => user_post.user)
+    @OneToMany(() => PostEntity, (user_post) => user_post.user, {
+        cascade: true,
+    })
     posts: Relation<PostEntity[]>;
 }
 

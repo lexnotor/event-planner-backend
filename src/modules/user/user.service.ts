@@ -1,5 +1,5 @@
 import { UserInfo } from "@/index";
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Like, Repository } from "typeorm";
 import { UserEntity } from "./user.entity";
@@ -48,5 +48,73 @@ export class UserService {
             },
         });
         return user;
+    }
+
+    async UpdateUser(payload: UserInfo): Promise<UserInfo> {
+        try {
+            const filter: FindManyOptions<UserEntity> = {};
+            filter.where = {
+                id: payload.id,
+            };
+
+            const user = await this.userRepo.findOneOrFail(filter);
+
+            payload.firstname && (user.firstname = payload.firstname);
+            payload.lastname && (user.lastname = payload.lastname);
+            payload.types && (user.types = payload.types);
+            payload.description && (user.description = payload.description);
+
+            await this.userRepo.save(user);
+
+            return user;
+        } catch (error) {
+            throw new HttpException("User not found", HttpStatus.NOT_MODIFIED);
+        }
+    }
+
+    async disableUser(id: string): Promise<string> {
+        try {
+            const user = await this.userRepo.findOneOrFail({
+                where: { id },
+                order: { updated_at: "ASC" },
+                relations: {
+                    address: true,
+                    contacts: true,
+                    photos: true,
+                    posts: true,
+                    secret: true,
+                    social: true,
+                },
+            });
+
+            await this.userRepo.softRemove(user);
+
+            return id;
+        } catch (error) {
+            throw new HttpException("User not found", HttpStatus.NOT_MODIFIED);
+        }
+    }
+
+    async deleteUser(id: string): Promise<string> {
+        try {
+            const user = await this.userRepo.findOneOrFail({
+                where: { id },
+                order: { updated_at: "ASC" },
+                relations: {
+                    address: true,
+                    contacts: true,
+                    photos: true,
+                    posts: true,
+                    secret: true,
+                    social: true,
+                },
+            });
+
+            await this.userRepo.remove(user);
+
+            return id;
+        } catch (error) {
+            throw new HttpException("User not found", HttpStatus.NOT_MODIFIED);
+        }
     }
 }
