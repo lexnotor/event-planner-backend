@@ -1,16 +1,32 @@
-import { UserInfo } from "@/index";
+import { ContactInfo, SocialInfo, UserInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Like, Repository } from "typeorm";
-import { UserEntity } from "./user.entity";
+import {
+    ContactEntity,
+    SecretEntity,
+    SocialEntity,
+    UserEntity,
+} from "./user.entity";
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepo: Repository<UserEntity>
+        private readonly userRepo: Repository<UserEntity>,
+        @InjectRepository(SocialEntity)
+        private readonly socialRepo: Repository<SocialEntity>,
+        @InjectRepository(SecretEntity)
+        private readonly secretRepo: Repository<SecretEntity>,
+        @InjectRepository(ContactEntity)
+        private readonly contactRepo: Repository<ContactEntity>
     ) {}
 
+    hashSecret(secret: string) {
+        return secret;
+    }
+
+    // User Section
     async getUser(
         payload: UserInfo,
         load: Record<string, boolean>
@@ -48,6 +64,33 @@ export class UserService {
             },
         });
         return user;
+    }
+
+    async createUser(payload: UserInfo, psw: string): Promise<UserInfo> {
+        const user = new UserEntity();
+        user.description = payload.description;
+        user.email = payload.email;
+        user.firstname = payload.firstname;
+        user.lastname = payload.lastname;
+        user.types = payload.types;
+        user.username = payload.username;
+
+        const secret = new SecretEntity();
+        secret.content = this.hashSecret(psw);
+
+        try {
+            await this.userRepo.save(user);
+
+            secret.user = user;
+            await this.secretRepo.save(secret);
+
+            return user;
+        } catch (error) {
+            throw new HttpException(
+                "USERNAME_ALREADY_EXIST",
+                HttpStatus.CONFLICT
+            );
+        }
     }
 
     async UpdateUser(payload: UserInfo): Promise<UserInfo> {
@@ -115,6 +158,99 @@ export class UserService {
             return id;
         } catch (error) {
             throw new HttpException("User not found", HttpStatus.NOT_MODIFIED);
+        }
+    }
+
+    // Social Section
+    async addSocial(payload: SocialInfo, id: string): Promise<SocialInfo> {
+        let user: UserEntity;
+
+        try {
+            user = await this.userRepo.findOneByOrFail({ id });
+        } catch (error) {
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        const social = new SocialEntity();
+        social.link = payload.link;
+        social.type = payload.type;
+        social.user = user;
+
+        try {
+            await this.socialRepo.save(social);
+
+            return social;
+        } catch (error) {
+            throw new HttpException(
+                "CANNOT ADD SOCIAL",
+                HttpStatus.NOT_ACCEPTABLE
+            );
+        }
+    }
+
+    async removeSocial(socialId: string, userId: string): Promise<string> {
+        try {
+            const social = await this.socialRepo.findOneOrFail({
+                where: { id: socialId },
+                relations: { user: true },
+            });
+            if (userId != social.user.id)
+                throw new HttpException(
+                    "NOT_YOUR_SOCIAL",
+                    HttpStatus.UNAUTHORIZED
+                );
+            await this.socialRepo.softRemove(social);
+
+            return socialId;
+        } catch (error) {
+            throw new HttpException("Social not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Contact Section
+    async addContact(payload: ContactInfo, id: string): Promise<ContactInfo> {
+        let user: UserEntity;
+
+        try {
+            user = await this.userRepo.findOneByOrFail({ id });
+        } catch (error) {
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        const contact = new ContactEntity();
+        contact.content = payload.content;
+        contact.type = payload.type;
+        contact.user = user;
+
+        try {
+            await this.contactRepo.save(contact);
+
+            return contact;
+        } catch (error) {
+            throw new HttpException(
+                "CANNOT_ADD_CONTACT",
+                HttpStatus.NOT_ACCEPTABLE
+            );
+        }
+    }
+
+    async removeContact(contactId: string, userId: string): Promise<string> {
+        try {
+            const contact = await this.contactRepo.findOneOrFail({
+                where: { id: contactId },
+                relations: { user: true },
+            });
+
+            if (userId != contact.user.id)
+                throw new HttpException(
+                    "NOT_YOUR_CONTACT",
+                    HttpStatus.UNAUTHORIZED
+                );
+            await this.contactRepo.softRemove(contact);
+
+            return contactId;
+        } catch (error) {
+            throw new HttpException("Contact not found", HttpStatus.NOT_FOUND);
         }
     }
 }

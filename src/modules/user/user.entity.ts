@@ -12,22 +12,22 @@ import { PostEntity } from "../post/post.entity";
 
 @Entity("user")
 class UserEntity extends DefaultEntity {
-    @Column("varchar")
+    @Column({ type: "varchar", nullable: false })
     firstname: string;
 
-    @Column("varchar")
+    @Column({ type: "varchar", nullable: false })
     lastname: string;
 
-    @Column("varchar")
+    @Column({ unique: true, type: "varchar", nullable: false })
     username: string;
 
-    @Column("varchar")
+    @Column({ type: "varchar", nullable: false })
     email: string;
 
-    @Column("varchar")
+    @Column({ type: "varchar", default: "" })
     description: string;
 
-    @Column("varchar")
+    @Column({ type: "varchar", nullable: false })
     types: string;
 
     @OneToMany(() => SecretEntity, (secret) => secret.user, { cascade: true })
