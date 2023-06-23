@@ -2,6 +2,7 @@ import { ApiResponse, SocialInfo, UserInfo } from "@/index";
 import {
     Body,
     Controller,
+    Delete,
     Get,
     HttpException,
     HttpStatus,
@@ -11,7 +12,7 @@ import {
     Query,
 } from "@nestjs/common";
 import { isUUID } from "class-validator";
-import { SearchUserDto, UpdateUserDto } from "./user.dto";
+import { AddSocialDto, SearchUserDto, UpdateUserDto } from "./user.dto";
 import { UserService } from "./user.service";
 
 @Controller("user")
@@ -58,7 +59,7 @@ export class UserController {
 
     @Post(":id/social")
     async addSocial(
-        @Body() payload,
+        @Body() payload: AddSocialDto,
         @Param("id") id: string
     ): Promise<ApiResponse<SocialInfo>> {
         this.checkId(id);
@@ -66,6 +67,19 @@ export class UserController {
         return {
             message: "Link Added",
             data: await this.userService.addSocial(payload, id),
+        };
+    }
+
+    @Delete(":id/social/:socialID")
+    async removeSocial(
+        @Param("socialID") socialID: string,
+        @Param("id") id: string
+    ): Promise<ApiResponse<string>> {
+        this.checkId(id);
+
+        return {
+            message: "Link Deleted",
+            data: await this.userService.removeSocial(socialID, id),
         };
     }
 }

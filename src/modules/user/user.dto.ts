@@ -130,6 +130,7 @@ class AddSocialDto {
     @IsUrl()
     link: string;
 
+    @IsNotEmpty()
     @IsEnum(SocialTypes)
     type: SocialTypes;
 }
