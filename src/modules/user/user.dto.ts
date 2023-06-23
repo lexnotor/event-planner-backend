@@ -7,7 +7,7 @@ import {
     Length,
 } from "class-validator";
 
-enum UsertTypes {
+enum UserTypes {
     PRESTATAIRE = "PRESTATAIRE",
     USER = "USER",
     COMMUNITY = "COMMUNITY",
@@ -41,8 +41,8 @@ class CreateUserDto {
 
     @IsOptional()
     @IsString()
-    @IsEnum(UsertTypes)
-    types: string = UsertTypes.USER;
+    @IsEnum(UserTypes)
+    types: string = UserTypes.USER;
 }
 
-export { CreateUserDto, UsertTypes };
+export { CreateUserDto, UserTypes };
