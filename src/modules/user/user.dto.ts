@@ -24,6 +24,11 @@ enum SocialTypes {
     INSTAGRAM = "INSTAGRAM",
 }
 
+enum ContactTypes {
+    PHONE = "PHONE",
+    EMAIL = "EMAIL",
+}
+
 class CreateUserDto {
     @IsNotEmpty()
     @IsString()
@@ -134,6 +139,16 @@ class AddSocialDto {
     @IsEnum(SocialTypes)
     type: SocialTypes;
 }
+class AddContactDto {
+    @IsNotEmpty()
+    @IsString()
+    @Length(3, 100)
+    content: string;
+
+    @IsNotEmpty()
+    @IsEnum(ContactTypes)
+    type: ContactTypes;
+}
 
 export {
     AddSocialDto,
@@ -142,4 +157,6 @@ export {
     SocialTypes,
     UpdateUserDto,
     UserTypes,
+    ContactTypes,
+    AddContactDto,
 };

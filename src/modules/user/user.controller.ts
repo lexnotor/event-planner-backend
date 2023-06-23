@@ -1,4 +1,4 @@
-import { ApiResponse, SocialInfo, UserInfo } from "@/index";
+import { ApiResponse, ContactInfo, SocialInfo, UserInfo } from "@/index";
 import {
     Body,
     Controller,
@@ -12,7 +12,12 @@ import {
     Query,
 } from "@nestjs/common";
 import { isUUID } from "class-validator";
-import { AddSocialDto, SearchUserDto, UpdateUserDto } from "./user.dto";
+import {
+    AddContactDto,
+    AddSocialDto,
+    SearchUserDto,
+    UpdateUserDto,
+} from "./user.dto";
 import { UserService } from "./user.service";
 
 @Controller("user")
@@ -57,6 +62,7 @@ export class UserController {
         };
     }
 
+    // Social Section
     @Post(":id/social")
     async addSocial(
         @Body() payload: AddSocialDto,
@@ -80,6 +86,34 @@ export class UserController {
         return {
             message: "Link Deleted",
             data: await this.userService.removeSocial(socialID, id),
+        };
+    }
+
+    // Contact Section
+    @Post(":id/contact")
+    async addContact(
+        @Body() payload: AddContactDto,
+        @Param("id") id: string
+    ): Promise<ApiResponse<ContactInfo>> {
+        this.checkId(id);
+
+        return {
+            message: "Link Added",
+            data: await this.userService.addContact(payload, id),
+        };
+    }
+
+    @Delete(":id/contact/:contactID")
+    async removeContact(
+        @Param("contactID") contactID: string,
+        @Param("id") id: string
+    ): Promise<ApiResponse<string>> {
+        this.checkId(id);
+        this.checkId(contactID);
+
+        return {
+            message: "Contact Deleted",
+            data: await this.userService.removeContact(contactID, id),
         };
     }
 }
