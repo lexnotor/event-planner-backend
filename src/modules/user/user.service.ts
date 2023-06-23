@@ -30,11 +30,12 @@ export class UserService {
     }
 
     // User Section
-    async getUser(
+    async getUsers(
         payload: UserInfo,
-        load: Record<string, boolean>
+        load?: Record<string, boolean>
     ): Promise<UserInfo[]> {
         const filter: FindManyOptions<UserEntity> = {};
+
         filter.where = {
             id: Like(payload.id || "%"),
             email: Like(payload.email || "%"),
@@ -44,10 +45,22 @@ export class UserService {
             types: Like(payload.types || "%"),
         };
         filter.relations = {
-            contacts: !!load.contacts,
-            address: !!load.address,
-            social: !!load.social,
-            photos: !!load.photos,
+            contacts: !!load?.contacts || false,
+            address: !!load?.address || false,
+            social: !!load?.social || false,
+            photos: !!load?.photos || false,
+        };
+        filter.select = {
+            id: true,
+            description: true,
+            firstname: true,
+            lastname: true,
+            username: true,
+            types: true,
+            contacts: !!load?.contacts || false,
+            address: !!load?.address || false,
+            social: !!load?.social || false,
+            photos: !!load?.photos || false,
         };
 
         const users = await this.userRepo.find(filter);
