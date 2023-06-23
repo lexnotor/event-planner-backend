@@ -1,8 +1,9 @@
-import { ContactInfo, SocialInfo, UserInfo } from "@/index";
+import { AddressInfo, ContactInfo, SocialInfo, UserInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { FindManyOptions, Like, Repository } from "typeorm";
 import {
+    AddressEntity,
     ContactEntity,
     SecretEntity,
     SocialEntity,
@@ -19,7 +20,9 @@ export class UserService {
         @InjectRepository(SecretEntity)
         private readonly secretRepo: Repository<SecretEntity>,
         @InjectRepository(ContactEntity)
-        private readonly contactRepo: Repository<ContactEntity>
+        private readonly contactRepo: Repository<ContactEntity>,
+        @InjectRepository(AddressEntity)
+        private readonly addressRepo: Repository<AddressEntity>
     ) {}
 
     hashSecret(secret: string) {
@@ -251,6 +254,53 @@ export class UserService {
             return contactId;
         } catch (error) {
             throw new HttpException("Contact not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // Address Section
+    async addAddress(payload: AddressInfo, id: string): Promise<AddressInfo> {
+        let user: UserEntity;
+
+        try {
+            user = await this.userRepo.findOneByOrFail({ id });
+        } catch (error) {
+            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
+        }
+
+        const address = new ContactEntity();
+        address.content = payload.content;
+        address.type = payload.type;
+        address.user = user;
+
+        try {
+            await this.addressRepo.save(address);
+
+            return address;
+        } catch (error) {
+            throw new HttpException(
+                "CANNOT_ADD_ADDRESS",
+                HttpStatus.NOT_ACCEPTABLE
+            );
+        }
+    }
+
+    async removeAddress(addressId: string, userId: string): Promise<string> {
+        try {
+            const address = await this.addressRepo.findOneOrFail({
+                where: { id: addressId },
+                relations: { user: true },
+            });
+
+            if (userId != address.user.id)
+                throw new HttpException(
+                    "NOT_YOUR_ADDRESS",
+                    HttpStatus.UNAUTHORIZED
+                );
+            await this.addressRepo.softRemove(address);
+
+            return addressId;
+        } catch (error) {
+            throw new HttpException("Address not found", HttpStatus.NOT_FOUND);
         }
     }
 }
