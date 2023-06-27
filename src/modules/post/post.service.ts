@@ -27,7 +27,7 @@ export class PostService {
         }
     }
 
-    async addPost(
+    async createPost(
         payload: PostInfo,
         user: string | UserEntity,
         file: any
@@ -36,7 +36,7 @@ export class PostService {
         post.author = payload.author;
         post.date = payload.date;
         post.likes = 0;
-        post.public = "true";
+        post.public = payload.public;
         post.tags = payload.tags;
         post.text = payload.text;
 
@@ -69,6 +69,36 @@ export class PostService {
             return postPhoto;
         } catch (error) {
             throw new HttpException("CANT_UPLOAD_PHOTO", HttpStatus.CONFLICT);
+        }
+    }
+
+    async update(payload: PostInfo): Promise<PostEntity> {
+        const post = await this.getPost(payload.id);
+        post.public = payload.public || post.public;
+        post.text = post.text;
+
+        try {
+            this.postRepo.save(post);
+            return post;
+        } catch (error) {
+            throw new HttpException(
+                "POST_NOT_MODIFIED",
+                HttpStatus.NOT_MODIFIED
+            );
+        }
+    }
+
+    async deletePost(id: string): Promise<string> {
+        const post = await this.getPost(id);
+
+        try {
+            this.postRepo.softRemove(post);
+            return id;
+        } catch (error) {
+            throw new HttpException(
+                "POST_NOT_DELETED",
+                HttpStatus.NOT_MODIFIED
+            );
         }
     }
 }

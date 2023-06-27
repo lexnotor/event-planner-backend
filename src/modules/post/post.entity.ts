@@ -18,8 +18,8 @@ class PostEntity extends DefaultEntity {
     @Column("varchar")
     text: string;
 
-    @Column("varchar")
-    public: string;
+    @Column("boolean")
+    public: boolean;
 
     @Column("timestamp")
     date: Date;
