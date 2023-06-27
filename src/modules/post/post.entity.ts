@@ -24,8 +24,8 @@ class PostEntity extends DefaultEntity {
     @Column("timestamp")
     date: Date;
 
-    @Column("varchar")
-    likes: string;
+    @Column("integer")
+    likes: number;
 
     @Column("varchar")
     tags: string;

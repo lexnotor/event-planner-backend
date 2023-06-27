@@ -9,7 +9,12 @@ import {
     UserEntity,
     UserPhotoEntity,
 } from "./user.entity";
-import { UserService } from "./user.service";
+import {
+    UserAddressService,
+    UserContactService,
+    UserService,
+    UserSocialService,
+} from "./user.service";
 
 @Module({
     imports: [
@@ -23,6 +28,11 @@ import { UserService } from "./user.service";
         ]),
     ],
     controllers: [UserController],
-    providers: [UserService],
+    providers: [
+        UserService,
+        UserSocialService,
+        UserContactService,
+        UserAddressService,
+    ],
 })
 export class UserModule {}

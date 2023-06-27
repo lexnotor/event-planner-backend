@@ -59,7 +59,7 @@ export interface PostInfo extends DefaultInfo {
     text?: string;
     public?: string;
     date?: Date;
-    likes?: string;
+    likes?: number;
     tags?: string;
     user?: UserInfo;
     post_photo?: PostPhotoInfo[];
@@ -73,7 +73,7 @@ export interface PostPhotoInfo extends DefaultInfo {
 export interface PhotoInfo extends DefaultInfo {
     link?: string;
     thumb?: string;
-    public?: string;
+    public?: boolean;
     date?: Date;
     comment?: string;
     tags?: string;
