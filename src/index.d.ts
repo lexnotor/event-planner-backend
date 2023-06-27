@@ -59,7 +59,7 @@ export interface PostInfo extends DefaultInfo {
     text?: string;
     public?: string;
     date?: Date;
-    likes?: string;
+    likes?: number;
     tags?: string;
     user?: UserInfo;
     post_photo?: PostPhotoInfo[];

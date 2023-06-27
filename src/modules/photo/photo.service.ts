@@ -17,7 +17,7 @@ export class PhotoService {
         return randomUUID();
     }
 
-    async savePhoto(payload: PhotoInfo, file: any): Promise<PhotoInfo> {
+    async savePhoto(payload: PhotoInfo, file: any): Promise<PhotoEntity> {
         const photo = new PhotoEntity();
         photo.comment = payload.comment || "";
         photo.date = payload.date || new Date();
@@ -34,7 +34,7 @@ export class PhotoService {
         }
     }
 
-    async getPhoto(id: string): Promise<PhotoInfo> {
+    async getPhoto(id: string): Promise<PhotoEntity> {
         try {
             const photo = await this.photoRepo.findOneByOrFail({ id });
             return photo;
@@ -43,7 +43,7 @@ export class PhotoService {
         }
     }
 
-    async updatePhoto(payload: PhotoInfo): Promise<PhotoInfo> {
+    async updatePhoto(payload: PhotoInfo): Promise<PhotoEntity> {
         const photo = await this.getPhoto(payload.id);
         photo.comment = payload.comment || photo.comment;
         photo.date = payload.date || photo.date;
