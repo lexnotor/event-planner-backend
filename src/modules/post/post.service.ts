@@ -1,4 +1,4 @@
-import { PostInfo, PostPhotoInfo } from "@/index";
+import { PostInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";

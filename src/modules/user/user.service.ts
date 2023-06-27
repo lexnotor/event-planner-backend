@@ -11,18 +11,12 @@ import {
 } from "./user.entity";
 
 @Injectable()
-export class UserService {
+class UserService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepo: Repository<UserEntity>,
-        @InjectRepository(SocialEntity)
-        private readonly socialRepo: Repository<SocialEntity>,
         @InjectRepository(SecretEntity)
-        private readonly secretRepo: Repository<SecretEntity>,
-        @InjectRepository(ContactEntity)
-        private readonly contactRepo: Repository<ContactEntity>,
-        @InjectRepository(AddressEntity)
-        private readonly addressRepo: Repository<AddressEntity>
+        private readonly secretRepo: Repository<SecretEntity>
     ) {}
 
     hashSecret(secret: string) {
@@ -33,7 +27,7 @@ export class UserService {
     async getUsers(
         payload: UserInfo,
         load?: Record<string, boolean>
-    ): Promise<UserInfo[]> {
+    ): Promise<UserEntity[]> {
         const filter: FindManyOptions<UserEntity> = {};
 
         filter.where = {
@@ -65,10 +59,13 @@ export class UserService {
 
         const users = await this.userRepo.find(filter);
 
+        if (users.length == 0)
+            throw new HttpException("USER_NOT_FOUND", HttpStatus.NOT_FOUND);
+
         return users;
     }
 
-    async getUserById(id: string): Promise<UserInfo> {
+    async getUserById(id: string): Promise<UserEntity> {
         const user = await this.userRepo.findOne({
             where: { id },
             relations: {
@@ -82,7 +79,7 @@ export class UserService {
         return user;
     }
 
-    async createUser(payload: UserInfo, psw: string): Promise<UserInfo> {
+    async createUser(payload: UserInfo, psw: string): Promise<UserEntity> {
         const user = new UserEntity();
         user.description = payload.description;
         user.email = payload.email;
@@ -109,7 +106,7 @@ export class UserService {
         }
     }
 
-    async UpdateUser(payload: UserInfo): Promise<UserInfo> {
+    async UpdateUser(payload: UserInfo): Promise<UserEntity> {
         try {
             const filter: FindManyOptions<UserEntity> = {};
             filter.where = {
@@ -176,16 +173,19 @@ export class UserService {
             throw new HttpException("User not found", HttpStatus.NOT_MODIFIED);
         }
     }
+}
+
+@Injectable()
+class UserSocialService {
+    constructor(
+        @InjectRepository(SocialEntity)
+        private readonly socialRepo: Repository<SocialEntity>,
+        private readonly userService: UserService
+    ) {}
 
     // Social Section
-    async addSocial(payload: SocialInfo, id: string): Promise<SocialInfo> {
-        let user: UserEntity;
-
-        try {
-            user = await this.userRepo.findOneByOrFail({ id });
-        } catch (error) {
-            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-        }
+    async addSocial(payload: SocialInfo, id: string): Promise<SocialEntity> {
+        const user = (await this.userService.getUsers({ id }))[0];
 
         const social = new SocialEntity();
         social.link = payload.link;
@@ -194,7 +194,6 @@ export class UserService {
 
         try {
             await this.socialRepo.save(social);
-
             return social;
         } catch (error) {
             throw new HttpException(
@@ -222,16 +221,19 @@ export class UserService {
             throw new HttpException("Social not found", HttpStatus.NOT_FOUND);
         }
     }
+}
+
+@Injectable()
+class UserContactService {
+    constructor(
+        @InjectRepository(ContactEntity)
+        private readonly contactRepo: Repository<ContactEntity>,
+        private readonly userService: UserService
+    ) {}
 
     // Contact Section
-    async addContact(payload: ContactInfo, id: string): Promise<ContactInfo> {
-        let user: UserEntity;
-
-        try {
-            user = await this.userRepo.findOneByOrFail({ id });
-        } catch (error) {
-            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-        }
+    async addContact(payload: ContactInfo, id: string): Promise<ContactEntity> {
+        const user = (await this.userService.getUsers({ id }))[0];
 
         const contact = new ContactEntity();
         contact.content = payload.content;
@@ -269,16 +271,19 @@ export class UserService {
             throw new HttpException("Contact not found", HttpStatus.NOT_FOUND);
         }
     }
+}
+
+@Injectable()
+class UserAddressService {
+    constructor(
+        @InjectRepository(AddressEntity)
+        private readonly addressRepo: Repository<AddressEntity>,
+        private readonly userService: UserService
+    ) {}
 
     // Address Section
-    async addAddress(payload: AddressInfo, id: string): Promise<AddressInfo> {
-        let user: UserEntity;
-
-        try {
-            user = await this.userRepo.findOneByOrFail({ id });
-        } catch (error) {
-            throw new HttpException("User not found", HttpStatus.NOT_FOUND);
-        }
+    async addAddress(payload: AddressInfo, id: string): Promise<AddressEntity> {
+        const user = (await this.userService.getUsers({ id }))[0];
 
         const address = new ContactEntity();
         address.content = payload.content;
@@ -317,3 +322,10 @@ export class UserService {
         }
     }
 }
+
+export {
+    UserService,
+    UserSocialService,
+    UserContactService,
+    UserAddressService,
+};

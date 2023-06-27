@@ -18,11 +18,19 @@ import {
     SearchUserDto,
     UpdateUserDto,
 } from "./user.dto";
-import { UserService } from "./user.service";
+import {
+    UserContactService,
+    UserService,
+    UserSocialService,
+} from "./user.service";
 
 @Controller("user")
 export class UserController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly userSocialService: UserSocialService,
+        private readonly userContactService: UserContactService
+    ) {}
 
     checkId(id: string) {
         if (!isUUID(id))
@@ -72,7 +80,7 @@ export class UserController {
 
         return {
             message: "Link Added",
-            data: await this.userService.addSocial(payload, id),
+            data: await this.userSocialService.addSocial(payload, id),
         };
     }
 
@@ -85,7 +93,7 @@ export class UserController {
 
         return {
             message: "Link Deleted",
-            data: await this.userService.removeSocial(socialID, id),
+            data: await this.userSocialService.removeSocial(socialID, id),
         };
     }
 
@@ -99,7 +107,7 @@ export class UserController {
 
         return {
             message: "Link Added",
-            data: await this.userService.addContact(payload, id),
+            data: await this.userContactService.addContact(payload, id),
         };
     }
 
@@ -113,7 +121,7 @@ export class UserController {
 
         return {
             message: "Contact Deleted",
-            data: await this.userService.removeContact(contactID, id),
+            data: await this.userContactService.removeContact(contactID, id),
         };
     }
 }
