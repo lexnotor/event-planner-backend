@@ -12,12 +12,15 @@ export class PhotoService {
         private readonly photoRepo: Repository<PhotoEntity>
     ) {}
 
-    uploadTo(file: any) {
+    uploadTo(file: Express.Multer.File) {
         file;
         return randomUUID();
     }
 
-    async savePhoto(payload: PhotoInfo, file: any): Promise<PhotoEntity> {
+    async savePhoto(
+        payload: PhotoInfo,
+        file: Express.Multer.File
+    ): Promise<PhotoEntity> {
         const photo = new PhotoEntity();
         photo.comment = payload.comment || "";
         photo.date = payload.date || new Date();
