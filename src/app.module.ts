@@ -7,6 +7,7 @@ import { DbconfigService } from "./modules/dbconfig/dbconfig.service";
 import { PhotoModule } from "./modules/photo/photo.module";
 import { PostModule } from "./modules/post/post.module";
 import { UserModule } from "./modules/user/user.module";
+import { AuthModule } from "./modules/auth/auth.module";
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { UserModule } from "./modules/user/user.module";
         UserModule,
         PostModule,
         PhotoModule,
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],
