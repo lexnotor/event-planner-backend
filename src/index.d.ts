@@ -73,7 +73,7 @@ export interface PostPhotoInfo extends DefaultInfo {
 export interface PhotoInfo extends DefaultInfo {
     link?: string;
     thumb?: string;
-    public?: string;
+    public?: boolean;
     date?: Date;
     comment?: string;
     tags?: string;

@@ -10,7 +10,7 @@ class PhotoEntity extends DefaultEntity {
     thumb: string;
 
     @Column("varchar")
-    public: string;
+    public: boolean;
 
     @Column("timestamp")
     date: Date;
