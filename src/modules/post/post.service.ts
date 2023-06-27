@@ -4,6 +4,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { PhotoService } from "../photo/photo.service";
 import { PostEntity, PostPhotoEntity } from "./post.entity";
+import { UserService } from "../user/user.service";
+import { UserEntity } from "../user/user.entity";
 
 @Injectable()
 export class PostService {
@@ -12,7 +14,8 @@ export class PostService {
         private readonly postRepo: Repository<PostEntity>,
         @InjectRepository(PostPhotoEntity)
         private readonly postPhotoRepo: Repository<PostPhotoEntity>,
-        private readonly photoService: PhotoService
+        private readonly photoService: PhotoService,
+        private readonly userService: UserService
     ) {}
 
     async getPost(id: string): Promise<PostEntity> {
@@ -24,7 +27,11 @@ export class PostService {
         }
     }
 
-    async addPost(payload: PostInfo, file: any): Promise<PostEntity> {
+    async addPost(
+        payload: PostInfo,
+        user: string | UserEntity,
+        file: any
+    ): Promise<PostEntity> {
         const post = new PostEntity();
         post.author = payload.author;
         post.date = payload.date;
@@ -32,6 +39,11 @@ export class PostService {
         post.public = "true";
         post.tags = payload.tags;
         post.text = payload.text;
+
+        if (typeof user == "string")
+            post.user = (await this.userService.getUsers({ id: user }))[0];
+        else post.user = user;
+
         try {
             await this.postRepo.save(post);
         } catch (error) {

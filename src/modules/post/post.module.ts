@@ -2,7 +2,8 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PhotoEntity } from "../photo/photo.entity";
 import { PhotoService } from "../photo/photo.service";
-import { UserEntity } from "../user/user.entity";
+import { SecretEntity, UserEntity } from "../user/user.entity";
+import { UserService } from "../user/user.service";
 import { PostController } from "./post.controller";
 import { PostEntity, PostPhotoEntity } from "./post.entity";
 import { PostService } from "./post.service";
@@ -14,9 +15,10 @@ import { PostService } from "./post.service";
             PostPhotoEntity,
             UserEntity,
             PhotoEntity,
+            SecretEntity,
         ]),
     ],
     controllers: [PostController],
-    providers: [PostService, PhotoService],
+    providers: [PostService, PhotoService, UserService],
 })
 export class PostModule {}
