@@ -7,6 +7,7 @@ import { UserService } from "../user/user.service";
 import { PostController } from "./post.controller";
 import { PostEntity, PostPhotoEntity } from "./post.entity";
 import { PostService } from "./post.service";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
     imports: [
@@ -17,6 +18,7 @@ import { PostService } from "./post.service";
             PhotoEntity,
             SecretEntity,
         ]),
+        AuthModule,
     ],
     controllers: [PostController],
     providers: [PostService, PhotoService, UserService],
