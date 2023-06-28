@@ -2,7 +2,9 @@ import { ApiResponse, PostInfo } from "@/index";
 import {
     Body,
     Controller,
+    Delete,
     Get,
+    Param,
     Post,
     Put,
     UploadedFile,
@@ -41,15 +43,36 @@ export class PostController {
         };
     }
 
+    @Get(":postId")
+    async getPost(@Param("postId") id: string): Promise<ApiResponse<PostInfo>> {
+        return {
+            message: "POST_FOUND",
+            data: await this.postService.getPost(id),
+        };
+    }
+
     @Put(":postId")
     @UseGuards(AuthGuard)
     async updatePost(
         @Body() payload: UpdatePostDto,
-        @User() user: UserIdentity
+        @User() user: UserIdentity,
+        @Param("postId") id: string
     ): Promise<ApiResponse<PostInfo>> {
         return {
-            message: "",
-            data: await this.postService.update(payload, user),
+            message: "Post Updated",
+            data: await this.postService.update({ ...payload, id }, user),
+        };
+    }
+
+    @Delete(":postId")
+    @UseGuards(AuthGuard)
+    async deletePost(
+        @Param("postId") id: string,
+        @User() user: UserIdentity
+    ): Promise<ApiResponse<string>> {
+        return {
+            message: "Post Deleted",
+            data: await this.postService.deletePost(id, user),
         };
     }
 }

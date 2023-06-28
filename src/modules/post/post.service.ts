@@ -170,8 +170,11 @@ export class PostService {
         }
     }
 
-    async deletePost(id: string): Promise<string> {
+    async deletePost(id: string, user: UserIdentity): Promise<string> {
         const post = await this.getPost(id);
+
+        if (post.user.id != user.id)
+            throw new HttpException("CONFLICT_USER", HttpStatus.CONFLICT);
 
         try {
             this.postRepo.softRemove(post);
