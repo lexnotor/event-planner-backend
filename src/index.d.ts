@@ -57,7 +57,7 @@ export interface UserPhotoInfo extends DefaultInfo {
 export interface PostInfo extends DefaultInfo {
     author?: string;
     text?: string;
-    public?: string;
+    public?: boolean;
     date?: Date;
     likes?: number;
     tags?: string;

@@ -5,7 +5,6 @@ import { FindManyOptions, Like, Repository } from "typeorm";
 import {
     AddressEntity,
     ContactEntity,
-    SecretEntity,
     SocialEntity,
     UserEntity,
 } from "./user.entity";
@@ -14,14 +13,8 @@ import {
 class UserService {
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepo: Repository<UserEntity>,
-        @InjectRepository(SecretEntity)
-        private readonly secretRepo: Repository<SecretEntity>
+        private readonly userRepo: Repository<UserEntity>
     ) {}
-
-    hashSecret(secret: string) {
-        return secret;
-    }
 
     // User Section
     async getUsers(
@@ -77,33 +70,6 @@ class UserService {
             },
         });
         return user;
-    }
-
-    async createUser(payload: UserInfo, psw: string): Promise<UserEntity> {
-        const user = new UserEntity();
-        user.description = payload.description;
-        user.email = payload.email;
-        user.firstname = payload.firstname;
-        user.lastname = payload.lastname;
-        user.types = payload.types;
-        user.username = payload.username;
-
-        const secret = new SecretEntity();
-        secret.content = this.hashSecret(psw);
-
-        try {
-            await this.userRepo.save(user);
-
-            secret.user = user;
-            await this.secretRepo.save(secret);
-
-            return user;
-        } catch (error) {
-            throw new HttpException(
-                "USERNAME_ALREADY_EXIST",
-                HttpStatus.CONFLICT
-            );
-        }
     }
 
     async UpdateUser(payload: UserInfo): Promise<UserEntity> {
@@ -324,8 +290,8 @@ class UserAddressService {
 }
 
 export {
+    UserAddressService,
+    UserContactService,
     UserService,
     UserSocialService,
-    UserContactService,
-    UserAddressService,
 };

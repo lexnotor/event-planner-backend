@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AuthModule } from "../auth/auth.module";
 import { UserController } from "./user.controller";
 import {
     AddressEntity,
     ContactEntity,
-    SecretEntity,
     SocialEntity,
     UserEntity,
     UserPhotoEntity,
@@ -20,12 +20,12 @@ import {
     imports: [
         TypeOrmModule.forFeature([
             UserEntity,
-            SecretEntity,
             SocialEntity,
             ContactEntity,
             AddressEntity,
             UserPhotoEntity,
         ]),
+        AuthModule,
     ],
     controllers: [UserController],
     providers: [
