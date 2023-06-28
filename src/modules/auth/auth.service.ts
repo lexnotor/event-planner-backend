@@ -5,9 +5,12 @@ import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { SecretEntity, UserEntity } from "../user/user.entity";
+import { genSaltSync, hash, compareSync } from "bcrypt";
+import { Buffer } from "buffer";
 
 @Injectable()
 export class AuthService {
+    salt: string;
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepo: Repository<UserEntity>,
@@ -15,10 +18,14 @@ export class AuthService {
         private readonly secretRepo: Repository<SecretEntity>,
         private readonly jwtService: JwtService,
         private readonly configService: ConfigService
-    ) {}
+    ) {
+        const round =
+            +this.configService.get<number>("SECRET_HASH_ROUND") || 10;
+        this.salt = genSaltSync(round);
+    }
 
-    hashSecret(secret: string) {
-        return secret;
+    async hashSecret(secret: string) {
+        return await hash(secret, this.salt);
     }
 
     async basicLogin(credential: string, psw: string = null) {
@@ -26,17 +33,15 @@ export class AuthService {
 
         try {
             // Find secret
-            const secret = await this.secretRepo.findOneOrFail({
+            const secrets = await this.secretRepo.find({
                 relations: { user: true },
                 where: [
                     {
-                        content: this.hashSecret(psw),
                         user: {
                             email: credential,
                         },
                     },
                     {
-                        content: this.hashSecret(psw),
                         user: {
                             username: credential,
                         },
@@ -45,7 +50,12 @@ export class AuthService {
             });
 
             // Extrate user
-            const user = secret.user;
+            const matches = secrets.find((secret) =>
+                compareSync(psw, secret.content)
+            );
+            if (!matches) throw new Error("USER_NOT_FOUND");
+
+            const user = matches.user;
 
             // Generate token
             const token = this.jwtService.sign(
@@ -80,7 +90,7 @@ export class AuthService {
         user.username = username;
 
         const secret = new SecretEntity();
-        secret.content = this.hashSecret(psw);
+        secret.content = await this.hashSecret(psw);
 
         try {
             await this.userRepo.save(user);
@@ -99,8 +109,9 @@ export class AuthService {
 
     extractBasicCredential(authorization: string) {
         const basic = authorization.replace(/^Basic /, "");
-        const [credential, psw] = basic.split(":", 2);
-
+        const [credential, psw] = Buffer.from(basic, "base64")
+            .toString("utf-8")
+            .split(":", 2);
         if (!credential || !psw) throw new Error("NO_CREDENTIAL");
 
         return [credential, psw];

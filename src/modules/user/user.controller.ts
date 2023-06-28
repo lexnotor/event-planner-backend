@@ -61,6 +61,14 @@ export class UserController {
             data: await this.userService.UpdateUser({ ...payload, id }),
         };
     }
+    @Get("me")
+    @UseGuards(AuthGuard)
+    async getMe(@User() user: UserIdentity): Promise<ApiResponse<UserInfo>> {
+        return {
+            message: "User",
+            data: await this.userService.getUserById(user.id),
+        };
+    }
 
     @Get(":id")
     @UseGuards(AuthGuard)
