@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { AuthModule } from "../auth/auth.module";
 import { UserController } from "./user.controller";
 import {
     AddressEntity,
@@ -24,6 +25,7 @@ import {
             AddressEntity,
             UserPhotoEntity,
         ]),
+        AuthModule,
     ],
     controllers: [UserController],
     providers: [

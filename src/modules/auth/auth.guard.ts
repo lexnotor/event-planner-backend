@@ -5,13 +5,17 @@ import {
     HttpStatus,
     Injectable,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { IncomingHttpHeaders } from "http";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-    constructor(private readonly jwtService: JwtService) {}
+    constructor(
+        private readonly jwtService: JwtService,
+        private readonly configService: ConfigService
+    ) {}
     canActivate(context: ExecutionContext): boolean | Promise<boolean> {
         const request = context
             .switchToHttp()
@@ -22,16 +26,13 @@ export class AuthGuard implements CanActivate {
         try {
             if (!token) throw new Error("EXPECTED_TOKEN");
             const user = this.jwtService.verify(token, {
-                secret: process.env.JWT_SECRET,
+                secret: this.configService.get<string>("JWT_SECRET"),
             });
             request.user = user;
 
             return true;
         } catch (error) {
-            throw new HttpException(
-                error.message || "INVALID_TOKEN",
-                HttpStatus.UNAUTHORIZED
-            );
+            throw new HttpException("INVALID_TOKEN", HttpStatus.UNAUTHORIZED);
         }
     }
 
