@@ -21,22 +21,24 @@ export class AuthService {
         return secret;
     }
 
-    async login(identifiant: string, psw: string) {
+    async basicLogin(credential: string, psw: string = null) {
+        if (!psw) [credential, psw] = this.extractBasicCredential(credential);
+
         try {
             // Find secret
             const secret = await this.secretRepo.findOneOrFail({
                 relations: { user: true },
                 where: [
                     {
-                        content: psw,
+                        content: this.hashSecret(psw),
                         user: {
-                            email: identifiant,
+                            email: credential,
                         },
                     },
                     {
-                        content: psw,
+                        content: this.hashSecret(psw),
                         user: {
-                            username: identifiant,
+                            username: credential,
                         },
                     },
                 ],
@@ -67,14 +69,15 @@ export class AuthService {
         }
     }
 
-    async signup(payload: UserInfo, psw: string): Promise<UserEntity> {
+    async signup(payload: UserInfo, credential: string): Promise<UserEntity> {
+        const [username, psw] = this.extractBasicCredential(credential);
         const user = new UserEntity();
         user.description = payload.description;
         user.email = payload.email;
         user.firstname = payload.firstname;
         user.lastname = payload.lastname;
         user.types = payload.types;
-        user.username = payload.username;
+        user.username = username;
 
         const secret = new SecretEntity();
         secret.content = this.hashSecret(psw);
@@ -92,5 +95,14 @@ export class AuthService {
                 HttpStatus.CONFLICT
             );
         }
+    }
+
+    extractBasicCredential(authorization: string) {
+        const basic = authorization.replace(/^Basic /, "");
+        const [credential, psw] = basic.split(":", 2);
+
+        if (!credential || !psw) throw new Error("NO_CREDENTIAL");
+
+        return [credential, psw];
     }
 }

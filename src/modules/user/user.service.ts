@@ -5,7 +5,6 @@ import { FindManyOptions, Like, Repository } from "typeorm";
 import {
     AddressEntity,
     ContactEntity,
-    SecretEntity,
     SocialEntity,
     UserEntity,
 } from "./user.entity";
@@ -14,9 +13,7 @@ import {
 class UserService {
     constructor(
         @InjectRepository(UserEntity)
-        private readonly userRepo: Repository<UserEntity>,
-        @InjectRepository(SecretEntity)
-        private readonly secretRepo: Repository<SecretEntity>
+        private readonly userRepo: Repository<UserEntity>
     ) {}
 
     // User Section

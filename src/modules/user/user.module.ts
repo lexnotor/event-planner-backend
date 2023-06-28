@@ -4,7 +4,6 @@ import { UserController } from "./user.controller";
 import {
     AddressEntity,
     ContactEntity,
-    SecretEntity,
     SocialEntity,
     UserEntity,
     UserPhotoEntity,
@@ -20,7 +19,6 @@ import {
     imports: [
         TypeOrmModule.forFeature([
             UserEntity,
-            SecretEntity,
             SocialEntity,
             ContactEntity,
             AddressEntity,
