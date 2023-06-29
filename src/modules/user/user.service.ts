@@ -23,14 +23,17 @@ class UserService {
     ): Promise<UserEntity[]> {
         const filter: FindManyOptions<UserEntity> = {};
 
-        filter.where = {
-            id: Like(payload.id || "%"),
-            email: Like(payload.email || "%"),
-            lastname: Like(payload.lastname || "%"),
-            firstname: Like(payload.firstname || "%"),
-            username: Like(payload.username || "%"),
-            types: Like(payload.types || "%"),
-        };
+        filter.where = payload.id
+            ? {
+                  id: payload.id,
+              }
+            : {
+                  email: Like(payload.email || "%"),
+                  lastname: Like(payload.lastname || "%"),
+                  firstname: Like(payload.firstname || "%"),
+                  username: Like(payload.username || "%"),
+                  types: Like(payload.types || "%"),
+              };
         filter.relations = {
             contacts: !!load?.contacts || false,
             address: !!load?.address || false,
@@ -50,17 +53,38 @@ class UserService {
             photos: !!load?.photos || false,
         };
 
-        const users = await this.userRepo.find(filter);
+        try {
+            const users = await this.userRepo.find(filter);
 
-        if (users.length == 0)
+            if (users.length == 0) throw new Error("EMPTY_TABLE");
+
+            return users;
+        } catch (error) {
             throw new HttpException("USER_NOT_FOUND", HttpStatus.NOT_FOUND);
-
-        return users;
+        }
     }
 
     async getUserById(id: string): Promise<UserEntity> {
         const user = await this.userRepo.findOne({
             where: { id },
+            select: {
+                id: true,
+                description: true,
+                firstname: true,
+                lastname: true,
+                username: true,
+                types: true,
+                email: true,
+                photos: true,
+                posts: {
+                    id: true,
+                    author: true,
+                    date: true,
+                    tags: true,
+                    public: true,
+                    likes: true,
+                },
+            },
             relations: {
                 address: true,
                 contacts: true,

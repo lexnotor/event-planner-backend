@@ -60,7 +60,7 @@ export class PostController {
     ): Promise<ApiResponse<PostInfo>> {
         return {
             message: "Post Updated",
-            data: await this.postService.update({ ...payload, id }, user),
+            data: await this.postService.updatePost({ ...payload, id }, user),
         };
     }
 

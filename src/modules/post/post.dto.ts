@@ -1,26 +1,33 @@
+import { Type } from "class-transformer";
 import {
+    IsBoolean,
+    IsDate,
     IsDateString,
     IsNotEmpty,
     IsOptional,
     IsString,
+    MinLength,
 } from "class-validator";
-import { Type } from "class-transformer";
 class CreatePostDto {
     @IsNotEmpty()
     @IsString()
     author: string;
 
-    @IsString()
+    @IsDate()
     @Type(() => Date)
+    @IsOptional()
     date = new Date();
 
-    @IsString()
+    @IsOptional()
+    @IsBoolean()
     public = true;
 
     @IsString()
-    tags: string;
+    @IsOptional()
+    tags = "";
 
     @IsString()
+    @MinLength(3)
     text: string;
 }
 
@@ -30,9 +37,9 @@ class UpdatePostDto {
     @Type(() => Date)
     date: Date;
 
-    @IsString()
+    @IsBoolean()
     @IsOptional()
-    public = true;
+    public: boolean;
 
     @IsString()
     @IsOptional()
