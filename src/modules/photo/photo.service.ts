@@ -1,20 +1,21 @@
 import { PhotoInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { randomUUID } from "crypto";
 import { Repository } from "typeorm";
+import { UploaderService } from "../uploader/uploader.service";
 import { PhotoEntity } from "./photo.entity";
 
 @Injectable()
 export class PhotoService {
     constructor(
         @InjectRepository(PhotoEntity)
-        private readonly photoRepo: Repository<PhotoEntity>
+        private readonly photoRepo: Repository<PhotoEntity>,
+        private readonly uploaderService: UploaderService
     ) {}
 
-    uploadTo(file: Express.Multer.File) {
-        file;
-        return randomUUID();
+    async uploadTo(file: Express.Multer.File) {
+        const remote_file = await this.uploaderService.uploadFile(file);
+        return remote_file.url;
     }
 
     async savePhoto(
@@ -24,10 +25,10 @@ export class PhotoService {
         const photo = new PhotoEntity();
         photo.comment = payload.comment || "";
         photo.date = payload.date || new Date();
-        photo.link = this.uploadTo(file);
         photo.public = payload.public;
         photo.tags = payload.tags;
         photo.thumb = "";
+        photo.link = await this.uploadTo(file);
 
         try {
             await this.photoRepo.save(photo);

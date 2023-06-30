@@ -34,5 +34,6 @@ import {
         UserContactService,
         UserAddressService,
     ],
+    exports: [UserService],
 })
 export class UserModule {}

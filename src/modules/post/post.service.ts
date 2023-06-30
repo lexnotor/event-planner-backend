@@ -8,11 +8,11 @@ import {
     MoreThanOrEqual,
     Repository,
 } from "typeorm";
+import { UserIdentity } from "../auth/auth.decorator";
 import { PhotoService } from "../photo/photo.service";
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { PostEntity, PostPhotoEntity } from "./post.entity";
-import { UserIdentity } from "../auth/auth.decorator";
 
 @Injectable()
 export class PostService {
