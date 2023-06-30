@@ -16,27 +16,31 @@ export class UploaderService {
     }
 
     async uploadFile(file: Express.Multer.File): Promise<FileMeta> {
-        if (!isString(file.mimetype) || /^image/i.test(file.mimetype))
+        if (!isString(file.mimetype) || !/^image/i.test(file.mimetype))
             throw new HttpException("INVALID_IMAGE", HttpStatus.BAD_REQUEST);
 
         return await this.uploadToCloudinary(file);
     }
 
     async uploadToCloudinary(file: Express.Multer.File): Promise<FileMeta> {
-        const base64_encoded = file.buffer.toString("base64");
-        const remote_file = await cloudinary.uploader.upload(
-            `data:${file.mimetype};base64,${base64_encoded}`,
-            { folder: "eventplanner" }
-        );
+        try {
+            const base64_encoded = file.buffer.toString("base64");
+            const remote_file = await cloudinary.uploader.upload(
+                `data:${file.mimetype};base64,${base64_encoded}`,
+                { folder: "eventplanner" }
+            );
 
-        return {
-            size: remote_file.bytes,
-            format: remote_file.format,
-            filename: remote_file.original_filename,
-            mimetype: `${remote_file.resource_type}/${remote_file.format}`,
-            url: remote_file.secure_url,
-            public_id: remote_file.public_id,
-            type: "cloudinary",
-        };
+            return {
+                size: remote_file.bytes,
+                format: remote_file.format,
+                filename: remote_file.original_filename,
+                mimetype: `${remote_file.resource_type}/${remote_file.format}`,
+                url: remote_file.secure_url,
+                public_id: remote_file.public_id,
+                type: "cloudinary",
+            };
+        } catch (error) {
+            throw new HttpException("UPLOADING_FAILED", HttpStatus.BAD_REQUEST);
+        }
     }
 }

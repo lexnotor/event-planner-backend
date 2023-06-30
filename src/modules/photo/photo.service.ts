@@ -25,8 +25,8 @@ export class PhotoService {
         const photo = new PhotoEntity();
         photo.comment = payload.comment || "";
         photo.date = payload.date || new Date();
-        photo.public = payload.public;
-        photo.tags = payload.tags;
+        photo.public = payload.public || true;
+        photo.tags = payload.tags || "";
         photo.thumb = "";
         photo.link = await this.uploadTo(file);
 
