@@ -78,3 +78,13 @@ export interface PhotoInfo extends DefaultInfo {
     comment?: string;
     tags?: string;
 }
+
+export interface FileMeta {
+    size: number;
+    filename: string;
+    url: string;
+    mimetype: string;
+    public_id?: string;
+    format?: string;
+    type?: string;
+}

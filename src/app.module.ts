@@ -8,6 +8,7 @@ import { PhotoModule } from "./modules/photo/photo.module";
 import { PostModule } from "./modules/post/post.module";
 import { UserModule } from "./modules/user/user.module";
 import { AuthModule } from "./modules/auth/auth.module";
+import { UploaderModule } from "./modules/uploader/uploader.module";
 
 @Module({
     imports: [
@@ -20,6 +21,7 @@ import { AuthModule } from "./modules/auth/auth.module";
         PostModule,
         PhotoModule,
         AuthModule,
+        UploaderModule,
     ],
     controllers: [AppController],
     providers: [AppService],
