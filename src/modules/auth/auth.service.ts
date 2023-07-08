@@ -74,7 +74,7 @@ export class AuthService {
         } catch (error) {
             throw new HttpException(
                 "IDENTIFIANT_INVALID",
-                HttpStatus.NOT_FOUND
+                HttpStatus.UNAUTHORIZED
             );
         }
     }
