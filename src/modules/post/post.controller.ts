@@ -22,7 +22,7 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Post()
-    @UseInterceptors(FileInterceptor("file"))
+    @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 2000000 } }))
     @UseGuards(AuthGuard)
     async createPost(
         @Body() payload: CreatePostDto,
@@ -60,7 +60,7 @@ export class PostController {
     ): Promise<ApiResponse<PostInfo>> {
         return {
             message: "Post Updated",
-            data: await this.postService.update({ ...payload, id }, user),
+            data: await this.postService.updatePost({ ...payload, id }, user),
         };
     }
 

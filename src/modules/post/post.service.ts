@@ -8,11 +8,11 @@ import {
     MoreThanOrEqual,
     Repository,
 } from "typeorm";
+import { UserIdentity } from "../auth/auth.decorator";
 import { PhotoService } from "../photo/photo.service";
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { PostEntity, PostPhotoEntity } from "./post.entity";
-import { UserIdentity } from "../auth/auth.decorator";
 
 @Injectable()
 export class PostService {
@@ -145,13 +145,13 @@ export class PostService {
         }
     }
 
-    async update(
+    async updatePost(
         payload: PostInfo,
         user: string | UserEntity | UserIdentity
     ): Promise<PostEntity> {
         const post = await this.getPost(payload.id);
         post.public = payload.public || post.public;
-        post.text = post.text;
+        post.text = payload.text || post.text;
 
         if (
             (typeof user == "string" && post.user.id != user) ||
