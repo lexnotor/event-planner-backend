@@ -10,7 +10,7 @@ import {
 import { UserEntity } from "../user/user.entity";
 import { PhotoEntity } from "../photo/photo.entity";
 
-@Entity("post")
+@Entity("post", { orderBy: { created_at: "DESC" } })
 class PostEntity extends DefaultEntity {
     @Column("varchar")
     author: string;

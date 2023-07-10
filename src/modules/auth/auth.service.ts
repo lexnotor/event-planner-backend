@@ -112,7 +112,8 @@ export class AuthService {
         const [credential, psw] = Buffer.from(basic, "base64")
             .toString("utf-8")
             .split(":", 2);
-        if (!credential || !psw) throw new Error("NO_CREDENTIAL");
+        if (!credential || !psw)
+            throw new HttpException("NO_CREDENTIAL", HttpStatus.BAD_REQUEST);
 
         return [credential, psw];
     }

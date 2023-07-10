@@ -48,7 +48,7 @@ export class PostService {
         };
         filter.relations = {
             user: true,
-            post_photo: true,
+            post_photo: { photo: true },
         };
 
         try {
@@ -77,6 +77,7 @@ export class PostService {
             likes: true,
             tags: true,
             text: true,
+            created_at: true,
             post_photo: true,
             user: {
                 id: true,
@@ -86,7 +87,7 @@ export class PostService {
         };
         filter.relations = {
             user: true,
-            post_photo: true,
+            post_photo: { photo: true },
         };
         filter.skip = meta.offeset;
         filter.take = meta.limit;
@@ -124,7 +125,7 @@ export class PostService {
         }
         if (!!file) await this.addPhoto(post, file);
 
-        return post;
+        return await this.getPost(post.id);
     }
 
     async addPhoto(

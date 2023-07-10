@@ -76,20 +76,11 @@ class UserService {
                 types: true,
                 email: true,
                 photos: true,
-                posts: {
-                    id: true,
-                    author: true,
-                    date: true,
-                    tags: true,
-                    public: true,
-                    likes: true,
-                },
             },
             relations: {
                 address: true,
                 contacts: true,
                 photos: true,
-                posts: true,
                 social: true,
             },
         });
