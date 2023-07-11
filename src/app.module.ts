@@ -9,6 +9,7 @@ import { PostModule } from "./modules/post/post.module";
 import { UserModule } from "./modules/user/user.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { UploaderModule } from "./modules/uploader/uploader.module";
+import { InvitationModule } from './modules/invitation/invitation.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { UploaderModule } from "./modules/uploader/uploader.module";
         PhotoModule,
         AuthModule,
         UploaderModule,
+        InvitationModule,
     ],
     controllers: [AppController],
     providers: [AppService],
