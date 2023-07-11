@@ -1,6 +1,14 @@
 import { DefaultEntity } from "@/utils/entity";
-import { Column, Entity, ManyToOne, Relation } from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    Relation,
+} from "typeorm";
 import { UserEntity } from "../user/user.entity";
+import { PhotoEntity } from "../photo/photo.entity";
 
 @Entity("invitation")
 class InvitationEntity extends DefaultEntity {
@@ -26,7 +34,25 @@ class InvitationEntity extends DefaultEntity {
     tags: string;
 
     @ManyToOne(() => UserEntity, (user) => user.invitations)
+    @JoinColumn({ name: "user_id" })
     user: Relation<UserEntity>;
+
+    @OneToMany(
+        () => InvitationPhotoEntity,
+        (invitation_photo) => invitation_photo.invitation
+    )
+    invitation_photo: Relation<InvitationPhotoEntity[]>;
 }
 
-export { InvitationEntity };
+@Entity("invitation_photo")
+class InvitationPhotoEntity extends DefaultEntity {
+    @ManyToOne(() => InvitationEntity)
+    @JoinColumn({ name: "invitation_id" })
+    invitation: Relation<InvitationEntity>;
+
+    @ManyToOne(() => PhotoEntity)
+    @JoinColumn({ name: "photo_id" })
+    photo: Relation<PhotoEntity>;
+}
+
+export { InvitationEntity, InvitationPhotoEntity };

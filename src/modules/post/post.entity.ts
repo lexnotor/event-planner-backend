@@ -30,7 +30,7 @@ class PostEntity extends DefaultEntity {
     @Column("varchar")
     tags: string;
 
-    @ManyToOne(() => UserEntity)
+    @ManyToOne(() => UserEntity, (user) => user.posts)
     @JoinColumn({ name: "user_id" })
     user: Relation<UserEntity>;
 
