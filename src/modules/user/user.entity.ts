@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { PhotoEntity } from "../photo/photo.entity";
 import { PostEntity } from "../post/post.entity";
+import { InvitationEntity } from "../invitation/invitation.entity";
 
 @Entity("user")
 class UserEntity extends DefaultEntity {
@@ -55,6 +56,11 @@ class UserEntity extends DefaultEntity {
         cascade: true,
     })
     posts: Relation<PostEntity[]>;
+
+    @OneToMany(() => InvitationEntity, (invitation) => invitation.user, {
+        cascade: true,
+    })
+    invitations: Relation<InvitationEntity[]>;
 }
 
 @Entity("secret")
