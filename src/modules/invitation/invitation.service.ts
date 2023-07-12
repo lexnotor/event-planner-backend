@@ -118,6 +118,7 @@ export class InvitationService {
         invitation.price = payload.price ?? "free";
         invitation.public = true;
         invitation.tags = payload.tags ?? "";
+        invitation.data = payload.data ?? "{}";
 
         // specify the owner
         if (typeof user == "string")

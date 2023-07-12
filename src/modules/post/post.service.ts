@@ -66,8 +66,8 @@ export class PostService {
         const filter: FindManyOptions<PostEntity> = {};
 
         filter.where = {
-            author: Like(payload.author || "%"),
-            likes: MoreThanOrEqual(payload.likes || 0),
+            author: Like(payload.author ?? "%"),
+            likes: MoreThanOrEqual(payload.likes ?? 0),
             public: true,
         };
         filter.select = {
