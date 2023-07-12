@@ -23,7 +23,7 @@ export interface UserInfo extends DefaultInfo {
     address?: AddressInfo[];
     photos?: UserPhotoInfo[];
     posts?: PostInfo[];
-    invitations?: InvitationInfo[];
+    designs?: DesignInfo[];
 }
 
 export interface SecretInfo extends DefaultInfo {
@@ -90,7 +90,7 @@ export interface FileMeta {
     type?: string;
 }
 
-export interface InvitationInfo extends DefaultInfo {
+export interface DesignInfo extends DefaultInfo {
     public?: boolean;
     price?: string;
     data?: string;
@@ -99,10 +99,10 @@ export interface InvitationInfo extends DefaultInfo {
     likes?: number;
     tags?: string;
     user?: UserInfo;
-    invitation_photo?: InvitationPhotoInfo[];
+    design_photo?: DesignPhotoInfo[];
 }
 
-export interface InvitationPhotoInfo extends DefaultInfo {
-    invitation?: InvitationInfo;
+export interface DesignPhotoInfo extends DefaultInfo {
+    design?: DesignInfo;
     photo?: PhotoInfo;
 }

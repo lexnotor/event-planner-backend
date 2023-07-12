@@ -10,8 +10,8 @@ import {
 import { UserEntity } from "../user/user.entity";
 import { PhotoEntity } from "../photo/photo.entity";
 
-@Entity("invitation")
-class InvitationEntity extends DefaultEntity {
+@Entity("design")
+class DesignEntity extends DefaultEntity {
     @Column("boolean")
     public: boolean;
 
@@ -33,26 +33,23 @@ class InvitationEntity extends DefaultEntity {
     @Column()
     tags: string;
 
-    @ManyToOne(() => UserEntity, (user) => user.invitations)
+    @ManyToOne(() => UserEntity, (user) => user.designs)
     @JoinColumn({ name: "user_id" })
     user: Relation<UserEntity>;
 
-    @OneToMany(
-        () => InvitationPhotoEntity,
-        (invitation_photo) => invitation_photo.invitation
-    )
-    invitation_photo: Relation<InvitationPhotoEntity[]>;
+    @OneToMany(() => DesignPhotoEntity, (design_photo) => design_photo.design)
+    design_photo: Relation<DesignPhotoEntity[]>;
 }
 
-@Entity("invitation_photo")
-class InvitationPhotoEntity extends DefaultEntity {
-    @ManyToOne(() => InvitationEntity)
-    @JoinColumn({ name: "invitation_id" })
-    invitation: Relation<InvitationEntity>;
+@Entity("design_photo")
+class DesignPhotoEntity extends DefaultEntity {
+    @ManyToOne(() => DesignEntity)
+    @JoinColumn({ name: "design_id" })
+    design: Relation<DesignEntity>;
 
     @ManyToOne(() => PhotoEntity)
     @JoinColumn({ name: "photo_id" })
     photo: Relation<PhotoEntity>;
 }
 
-export { InvitationEntity, InvitationPhotoEntity };
+export { DesignEntity, DesignPhotoEntity };

@@ -7,7 +7,7 @@ import {
     MinLength,
 } from "class-validator";
 
-class CreateInvitationDto {
+class CreateDesignDto {
     @IsNotEmpty()
     @IsString()
     @MinLength(3)
@@ -30,7 +30,7 @@ class CreateInvitationDto {
     @IsOptional()
     data = "{}";
 }
-class UpdateInvitationDto {
+class UpdateDesignDto {
     @IsString()
     @MinLength(3)
     @IsOptional()
@@ -54,4 +54,4 @@ class UpdateInvitationDto {
     data: string;
 }
 
-export { CreateInvitationDto, UpdateInvitationDto };
+export { CreateDesignDto, UpdateDesignDto };

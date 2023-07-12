@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { InvitationController } from "./invitation.controller";
-import { InvitationService } from "./invitation.service";
+import { DesignController } from "./design.controller";
+import { DesignService } from "./design.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { InvitationEntity, InvitationPhotoEntity } from "./invitation.entity";
+import { DesignEntity, DesignPhotoEntity } from "./design.entity";
 import { UserEntity } from "../user/user.entity";
 import { PhotoEntity } from "../photo/photo.entity";
 import { UserModule } from "../user/user.module";
@@ -12,8 +12,8 @@ import { AuthModule } from "../auth/auth.module";
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            InvitationEntity,
-            InvitationPhotoEntity,
+            DesignEntity,
+            DesignPhotoEntity,
             UserEntity,
             PhotoEntity,
         ]),
@@ -21,7 +21,7 @@ import { AuthModule } from "../auth/auth.module";
         PhotoModule,
         AuthModule,
     ],
-    controllers: [InvitationController],
-    providers: [InvitationService],
+    controllers: [DesignController],
+    providers: [DesignService],
 })
-export class InvitationModule {}
+export class DesignModule {}
