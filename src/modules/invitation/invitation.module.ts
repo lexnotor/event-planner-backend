@@ -3,10 +3,21 @@ import { InvitationController } from "./invitation.controller";
 import { InvitationService } from "./invitation.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { InvitationEntity, InvitationPhotoEntity } from "./invitation.entity";
+import { UserEntity } from "../user/user.entity";
+import { PhotoEntity } from "../photo/photo.entity";
+import { UserModule } from "../user/user.module";
+import { PhotoModule } from "../photo/photo.module";
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([InvitationEntity, InvitationPhotoEntity]),
+        TypeOrmModule.forFeature([
+            InvitationEntity,
+            InvitationPhotoEntity,
+            UserEntity,
+            PhotoEntity,
+        ]),
+        UserModule,
+        PhotoModule,
     ],
     controllers: [InvitationController],
     providers: [InvitationService],

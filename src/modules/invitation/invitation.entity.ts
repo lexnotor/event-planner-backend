@@ -12,7 +12,7 @@ import { PhotoEntity } from "../photo/photo.entity";
 
 @Entity("invitation")
 class InvitationEntity extends DefaultEntity {
-    @Column()
+    @Column("boolean")
     public: boolean;
 
     @Column()

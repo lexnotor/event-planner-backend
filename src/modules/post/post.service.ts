@@ -161,7 +161,7 @@ export class PostService {
             throw new HttpException("USER_CONFLICT", HttpStatus.CONFLICT);
 
         try {
-            this.postRepo.save(post);
+            await this.postRepo.save(post);
             return post;
         } catch (error) {
             throw new HttpException(
