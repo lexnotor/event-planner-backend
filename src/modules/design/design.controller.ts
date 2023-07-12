@@ -22,7 +22,9 @@ export class DesignController {
     constructor(private readonly designService: DesignService) {}
 
     @Post()
-    @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 2000000 } }))
+    @UseInterceptors(
+        FileInterceptor("file", { limits: { fileSize: 2_000_000 } })
+    )
     @UseGuards(AuthGuard)
     async saveDesign(
         @Body() payload: CreateDesignDto,
@@ -35,12 +37,12 @@ export class DesignController {
         };
     }
 
-    @Put(":id")
+    @Put(":designId")
     @UseGuards(AuthGuard)
     async updateDesign(
         @Body() payload: UpdateDesignDto,
         @User() user: UserIdentity,
-        @Param("id") id: string
+        @Param("designId") id: string
     ): Promise<ApiResponse<DesignInfo>> {
         return {
             message: "DESIGN_UPDATED",
@@ -51,8 +53,10 @@ export class DesignController {
         };
     }
 
-    @Get(":id")
-    async getDesign(@Param("id") id: string): Promise<ApiResponse<DesignInfo>> {
+    @Get(":designId")
+    async getDesign(
+        @Param("designId") id: string
+    ): Promise<ApiResponse<DesignInfo>> {
         return {
             message: "DESIGN_FOUND",
             data: await this.designService.getDesignById(id),
@@ -67,10 +71,10 @@ export class DesignController {
         };
     }
 
-    @Delete(":id")
+    @Delete(":designId")
     @UseGuards(AuthGuard)
     async deleteDesign(
-        @Param("id") id: string,
+        @Param("designId") id: string,
         @User() user: UserIdentity
     ): Promise<ApiResponse<string>> {
         return {

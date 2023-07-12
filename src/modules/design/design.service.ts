@@ -65,8 +65,8 @@ export class DesignService {
             public: true,
             likes: MoreThanOrEqual(payload.likes ?? 0),
             user: {
-                email: Like(payload.user.email ?? "%"),
-                username: Like(payload.user.username ?? "%"),
+                email: Like(payload.user?.email ?? "%"),
+                username: Like(payload.user?.username ?? "%"),
             },
         };
         filter.relations = {
@@ -97,7 +97,7 @@ export class DesignService {
             if (designs.length == 0) throw new Error("empty");
             return designs;
         } catch (error) {
-            throw new HttpException("DESIGNS_NOTFOUND", HttpStatus.NO_CONTENT);
+            throw new HttpException("DESIGNS_NOTFOUND", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -110,9 +110,11 @@ export class DesignService {
         const design = new DesignEntity();
         design.text = payload.text ?? "";
         design.price = payload.price ?? "free";
+        design.comments = "";
         design.public = true;
         design.tags = payload.tags ?? "";
         design.data = payload.data ?? "{}";
+        design.likes = 0;
 
         // specify the owner
         if (typeof user == "string")

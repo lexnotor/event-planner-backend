@@ -22,7 +22,9 @@ export class PostController {
     constructor(private readonly postService: PostService) {}
 
     @Post()
-    @UseInterceptors(FileInterceptor("file", { limits: { fileSize: 2000000 } }))
+    @UseInterceptors(
+        FileInterceptor("file", { limits: { fileSize: 2_000_000 } })
+    )
     @UseGuards(AuthGuard)
     async createPost(
         @Body() payload: CreatePostDto,
