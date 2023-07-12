@@ -7,6 +7,7 @@ import { UserEntity } from "../user/user.entity";
 import { PhotoEntity } from "../photo/photo.entity";
 import { UserModule } from "../user/user.module";
 import { PhotoModule } from "../photo/photo.module";
+import { AuthModule } from "../auth/auth.module";
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { PhotoModule } from "../photo/photo.module";
         ]),
         UserModule,
         PhotoModule,
+        AuthModule,
     ],
     controllers: [InvitationController],
     providers: [InvitationService],
