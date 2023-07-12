@@ -4,6 +4,8 @@ import {
     Controller,
     Delete,
     Get,
+    HttpException,
+    HttpStatus,
     Param,
     Post,
     Put,
@@ -31,6 +33,8 @@ export class DesignController {
         @UploadedFile() file: Express.Multer.File,
         @User() user: UserIdentity
     ): Promise<ApiResponse<DesignInfo>> {
+        if (!file) throw new HttpException("NO_FILE", HttpStatus.BAD_REQUEST);
+
         return {
             message: "",
             data: await this.designService.saveDesign(payload, user.id, file),
