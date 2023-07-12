@@ -1,7 +1,13 @@
 import { InvitationInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { FindManyOptions, FindOneOptions, Like, Repository } from "typeorm";
+import {
+    FindManyOptions,
+    FindOneOptions,
+    Like,
+    MoreThanOrEqual,
+    Repository,
+} from "typeorm";
 import { UserIdentity } from "../auth/auth.decorator";
 import { PhotoService } from "../photo/photo.service";
 import { UserEntity } from "../user/user.entity";
@@ -53,10 +59,14 @@ export class InvitationService {
         }
     }
 
-    async getInvitations(payload: InvitationInfo): Promise<InvitationEntity[]> {
+    async getInvitations(
+        payload: InvitationInfo,
+        meta: { offeset: number; limit: number } = { offeset: 0, limit: 20 }
+    ): Promise<InvitationEntity[]> {
         const filter: FindManyOptions<InvitationEntity> = {};
         filter.where = {
             public: true,
+            likes: MoreThanOrEqual(payload.likes ?? 0),
             user: {
                 email: Like(payload.user.email ?? "%"),
                 username: Like(payload.user.username ?? "%"),
@@ -82,6 +92,9 @@ export class InvitationService {
                 firstname: true,
             },
         };
+        filter.skip = meta.offeset;
+        filter.take = meta.limit;
+
         try {
             const invitations = await this.invitationRepo.find(filter);
             if (invitations.length == 0) throw new Error("empty");
