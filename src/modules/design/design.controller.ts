@@ -2,6 +2,8 @@ import { ApiResponse, DesignInfo } from "@/index";
 import {
     Body,
     Controller,
+    Delete,
+    Get,
     Param,
     Post,
     Put,
@@ -46,6 +48,34 @@ export class DesignController {
                 { ...payload, id },
                 user
             ),
+        };
+    }
+
+    @Get(":id")
+    async getDesign(@Param("id") id: string): Promise<ApiResponse<DesignInfo>> {
+        return {
+            message: "DESIGN_FOUND",
+            data: await this.designService.getDesignById(id),
+        };
+    }
+
+    @Get()
+    async getDesigns(): Promise<ApiResponse<DesignInfo[]>> {
+        return {
+            message: "DESIGNS_FOUND",
+            data: await this.designService.getDesigns(),
+        };
+    }
+
+    @Delete(":id")
+    @UseGuards(AuthGuard)
+    async deleteDesign(
+        @Param("id") id: string,
+        @User() user: UserIdentity
+    ): Promise<ApiResponse<string>> {
+        return {
+            message: "DESIGN_DELETED",
+            data: await this.designService.deleteDesign(id, user),
         };
     }
 }

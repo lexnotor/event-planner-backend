@@ -57,7 +57,7 @@ export class DesignService {
     }
 
     async getDesigns(
-        payload: DesignInfo,
+        payload: DesignInfo = {},
         meta: { offeset: number; limit: number } = { offeset: 0, limit: 20 }
     ): Promise<DesignEntity[]> {
         const filter: FindManyOptions<DesignEntity> = {};
