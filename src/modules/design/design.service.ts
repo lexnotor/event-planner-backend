@@ -71,7 +71,7 @@ export class DesignService {
         };
         filter.relations = {
             user: true,
-            design_photo: true,
+            design_photo: { photo: true },
         };
         filter.select = {
             id: true,
