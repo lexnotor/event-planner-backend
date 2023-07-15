@@ -106,3 +106,10 @@ export interface DesignPhotoInfo extends DefaultInfo {
     design?: DesignInfo;
     photo?: PhotoInfo;
 }
+
+export interface CommentInfo extends DefaultInfo {
+    text?: string;
+    date?: Date;
+    public?: boolean;
+    user?: UserInfo;
+}

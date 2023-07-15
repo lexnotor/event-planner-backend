@@ -10,6 +10,7 @@ import { PhotoModule } from "./modules/photo/photo.module";
 import { PostModule } from "./modules/post/post.module";
 import { UploaderModule } from "./modules/uploader/uploader.module";
 import { UserModule } from "./modules/user/user.module";
+import { CommentModule } from './modules/comment/comment.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { UserModule } from "./modules/user/user.module";
         AuthModule,
         UploaderModule,
         DesignModule,
+        CommentModule,
     ],
     controllers: [AppController],
     providers: [AppService],
