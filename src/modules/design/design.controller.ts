@@ -1,4 +1,4 @@
-import { ApiResponse, DesignInfo } from "@/index";
+import { ApiResponse, CommentInfo, DesignInfo } from "@/index";
 import {
     Body,
     Controller,
@@ -16,7 +16,11 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User, UserIdentity } from "../auth/auth.decorator";
 import { AuthGuard } from "../auth/auth.guard";
-import { CreateDesignDto, UpdateDesignDto } from "./design.dto";
+import {
+    AddCommentDesignDto,
+    CreateDesignDto,
+    UpdateDesignDto,
+} from "./design.dto";
 import { DesignService } from "./design.service";
 
 @Controller("design")
@@ -64,6 +68,31 @@ export class DesignController {
         return {
             message: "DESIGN_FOUND",
             data: await this.designService.getDesignById(id),
+        };
+    }
+
+    @Post(":designId/comment")
+    @UseGuards(AuthGuard)
+    async addComment(
+        @Param("designId") id: string,
+        @Body() payload: AddCommentDesignDto,
+        @User() user: UserIdentity
+    ): Promise<ApiResponse<CommentInfo>> {
+        return {
+            message: "COMMENT_ADDED",
+            data: await this.designService.addComment(id, user.id, payload),
+        };
+    }
+
+    @Delete(":designId/comment/:commentId")
+    @UseGuards(AuthGuard)
+    async deleteComment(
+        @Param("commentId") id: string,
+        @User() user: UserIdentity
+    ): Promise<ApiResponse<string>> {
+        return {
+            message: "COMMENT_DELETED",
+            data: await this.designService.deleteComment(id, user.id),
         };
     }
 

@@ -1,5 +1,6 @@
 import {
     IsBoolean,
+    IsDate,
     IsJSON,
     IsNotEmpty,
     IsOptional,
@@ -53,5 +54,15 @@ class UpdateDesignDto {
     @IsOptional()
     data: string;
 }
+class AddCommentDesignDto {
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(3)
+    text: string;
 
-export { CreateDesignDto, UpdateDesignDto };
+    @IsOptional()
+    @IsDate()
+    date: Date;
+}
+
+export { CreateDesignDto, UpdateDesignDto, AddCommentDesignDto };
