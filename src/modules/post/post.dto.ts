@@ -50,4 +50,15 @@ class UpdatePostDto {
     text: string;
 }
 
-export { CreatePostDto, UpdatePostDto };
+class AddCommentPostDto {
+    @IsNotEmpty()
+    @IsString()
+    @MinLength(3)
+    text: string;
+
+    @IsOptional()
+    @IsDate()
+    date: Date;
+}
+
+export { CreatePostDto, UpdatePostDto, AddCommentPostDto };

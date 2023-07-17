@@ -1,4 +1,4 @@
-import { PostInfo } from "@/index";
+import { CommentInfo, PostInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
@@ -9,10 +9,12 @@ import {
     Repository,
 } from "typeorm";
 import { UserIdentity } from "../auth/auth.decorator";
+import { CommentEntity } from "../comment/comment.entity";
+import { CommentService } from "../comment/comment.service";
 import { PhotoService } from "../photo/photo.service";
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
-import { PostEntity, PostPhotoEntity } from "./post.entity";
+import { PostCommentEntity, PostEntity, PostPhotoEntity } from "./post.entity";
 
 @Injectable()
 export class PostService {
@@ -21,7 +23,10 @@ export class PostService {
         private readonly postRepo: Repository<PostEntity>,
         @InjectRepository(PostPhotoEntity)
         private readonly postPhotoRepo: Repository<PostPhotoEntity>,
+        @InjectRepository(PostCommentEntity)
+        private readonly postCommentRepo: Repository<PostCommentEntity>,
         private readonly photoService: PhotoService,
+        private readonly commentService: CommentService,
         private readonly userService: UserService
     ) {}
 
@@ -143,6 +148,60 @@ export class PostService {
             return postPhoto;
         } catch (error) {
             throw new HttpException("CANT_UPLOAD_PHOTO", HttpStatus.CONFLICT);
+        }
+    }
+
+    async addComment(
+        post: string | PostEntity,
+        user: string | UserEntity,
+        ...payload: CommentInfo[]
+    ): Promise<CommentEntity> {
+        const postComment = new PostCommentEntity();
+
+        if (typeof post == "string")
+            postComment.post = await this.getPost(post);
+        else postComment.post = post;
+
+        if (typeof user == "string")
+            postComment.comment = await this.commentService.addComment(
+                payload[0],
+                await this.userService.getUserById(user)
+            );
+        else
+            postComment.comment = await this.commentService.addComment(
+                payload[0],
+                user
+            );
+
+        try {
+            await this.postCommentRepo.save(postComment);
+            return postComment.getComment();
+        } catch (error) {
+            throw new HttpException(
+                "CANNOT_SAVE_POST_COMMENT",
+                HttpStatus.CONFLICT
+            );
+        }
+    }
+
+    async deleteComment(id: string, user: string): Promise<string> {
+        const filter: FindOneOptions<PostCommentEntity> = {};
+        filter.where = { comment: { id } };
+        filter.relations = { comment: { user: true } };
+        filter.select = { id: true, comment: { user: { id: true }, id: true } };
+
+        try {
+            const postComment = await this.postCommentRepo.findOneOrFail(
+                filter
+            );
+
+            if (postComment.comment.user?.id != user)
+                throw new Error("NOT_YOUR_COMMENT");
+
+            await this.postCommentRepo.softRemove(postComment);
+            return id;
+        } catch (error) {
+            throw new HttpException("COMMENT_NOT_FOUND", HttpStatus.NOT_FOUND);
         }
     }
 

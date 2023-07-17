@@ -13,9 +13,10 @@ import {
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { User, UserIdentity } from "../auth/auth.decorator";
-import { CreatePostDto, UpdatePostDto } from "./post.dto";
-import { PostService } from "./post.service";
 import { AuthGuard } from "../auth/auth.guard";
+import { CommentEntity } from "../comment/comment.entity";
+import { AddCommentPostDto, CreatePostDto, UpdatePostDto } from "./post.dto";
+import { PostService } from "./post.service";
 
 @Controller("post")
 export class PostController {
@@ -42,6 +43,31 @@ export class PostController {
         return {
             message: "Posts Found",
             data: await this.postService.getPosts(),
+        };
+    }
+
+    @Post(":postId/comment")
+    @UseGuards(AuthGuard)
+    async addComment(
+        @Param("postId") id: string,
+        @Body() payload: AddCommentPostDto,
+        @User() user: UserIdentity
+    ): Promise<ApiResponse<CommentEntity>> {
+        return {
+            message: "COMMENT_ADDED",
+            data: await this.postService.addComment(id, user.id, payload),
+        };
+    }
+
+    @Delete(":postId/comment/:commentId")
+    @UseGuards(AuthGuard)
+    async deleteComment(
+        @Param("commentId") id: string,
+        @User() user: UserIdentity
+    ): Promise<ApiResponse<string>> {
+        return {
+            message: "COMMENT_DELETED",
+            data: await this.postService.deleteComment(id, user.id),
         };
     }
 
