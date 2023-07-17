@@ -52,6 +52,31 @@ export class CommentService {
         }
     }
 
+    async updateComment(
+        payload: CommentInfo,
+        user: UserEntity | string
+    ): Promise<CommentEntity> {
+        const comment = await this.getCommentById(payload.id);
+        comment.text = payload.text ?? comment.text;
+        comment.public = payload.public ?? comment.public;
+        comment.date = payload.date ?? comment.date;
+
+        if (
+            (typeof user == "string" && user != comment.user.id) ||
+            (typeof user != "string" && user.id != comment.user.id)
+        )
+            throw new HttpException("CONFLICT_USER", HttpStatus.UNAUTHORIZED);
+        try {
+            await this.commentRepo.save(comment);
+            return comment;
+        } catch (error) {
+            throw new HttpException(
+                "COMMENT_NOT_MODIFIED",
+                HttpStatus.NOT_MODIFIED
+            );
+        }
+    }
+
     async deleteComment(id: string): Promise<string> {
         const comment = await this.getCommentById(id);
         try {

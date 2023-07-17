@@ -1,21 +1,22 @@
 import { Module } from "@nestjs/common";
-import { DesignController } from "./design.controller";
-import { DesignService } from "./design.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { DesignEntity, DesignPhotoEntity } from "./design.entity";
-import { UserEntity } from "../user/user.entity";
-import { PhotoEntity } from "../photo/photo.entity";
-import { UserModule } from "../user/user.module";
-import { PhotoModule } from "../photo/photo.module";
 import { AuthModule } from "../auth/auth.module";
+import { PhotoModule } from "../photo/photo.module";
+import { UserModule } from "../user/user.module";
+import { DesignController } from "./design.controller";
+import {
+    DesignCommentEntity,
+    DesignEntity,
+    DesignPhotoEntity,
+} from "./design.entity";
+import { DesignService } from "./design.service";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
             DesignEntity,
             DesignPhotoEntity,
-            UserEntity,
-            PhotoEntity,
+            DesignCommentEntity,
         ]),
         UserModule,
         PhotoModule,

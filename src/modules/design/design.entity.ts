@@ -5,10 +5,12 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
+    OneToOne,
     Relation,
 } from "typeorm";
 import { UserEntity } from "../user/user.entity";
 import { PhotoEntity } from "../photo/photo.entity";
+import { CommentEntity } from "../comment/comment.entity";
 
 @Entity("design")
 class DesignEntity extends DefaultEntity {
@@ -52,4 +54,19 @@ class DesignPhotoEntity extends DefaultEntity {
     photo: Relation<PhotoEntity>;
 }
 
-export { DesignEntity, DesignPhotoEntity };
+@Entity("design_comment")
+class DesignCommentEntity extends DefaultEntity {
+    @ManyToOne(() => DesignEntity)
+    @JoinColumn({ name: "design_id" })
+    design?: Relation<DesignEntity>;
+
+    @OneToOne(() => CommentEntity, { cascade: true })
+    @JoinColumn({ name: "comment_id" })
+    comment?: Relation<CommentEntity>;
+
+    getComment() {
+        return this.comment;
+    }
+}
+
+export { DesignEntity, DesignPhotoEntity, DesignCommentEntity };
