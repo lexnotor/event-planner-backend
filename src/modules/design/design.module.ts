@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthModule } from "../auth/auth.module";
+import { CommentModule } from "../comment/comment.module";
 import { PhotoModule } from "../photo/photo.module";
 import { UserModule } from "../user/user.module";
 import { DesignController } from "./design.controller";
@@ -21,6 +22,7 @@ import { DesignService } from "./design.service";
         UserModule,
         PhotoModule,
         AuthModule,
+        CommentModule,
     ],
     controllers: [DesignController],
     providers: [DesignService],

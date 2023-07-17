@@ -1,4 +1,4 @@
-import { DesignInfo } from "@/index";
+import { CommentInfo, DesignInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
@@ -12,7 +12,13 @@ import { UserIdentity } from "../auth/auth.decorator";
 import { PhotoService } from "../photo/photo.service";
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
-import { DesignEntity, DesignPhotoEntity } from "./design.entity";
+import {
+    DesignCommentEntity,
+    DesignEntity,
+    DesignPhotoEntity,
+} from "./design.entity";
+import { CommentEntity } from "../comment/comment.entity";
+import { CommentService } from "../comment/comment.service";
 
 @Injectable()
 export class DesignService {
@@ -21,7 +27,10 @@ export class DesignService {
         private readonly designRepo: Repository<DesignEntity>,
         @InjectRepository(DesignPhotoEntity)
         private readonly designPhotoRepo: Repository<DesignPhotoEntity>,
+        @InjectRepository(DesignCommentEntity)
+        private readonly designCommentRepo: Repository<DesignCommentEntity>,
         private readonly photoService: PhotoService,
+        private readonly commentService: CommentService,
         private readonly userService: UserService
     ) {}
 
@@ -158,6 +167,60 @@ export class DesignService {
             return designPhoto;
         } catch (error) {
             throw new HttpException("CANT_UPLOAD_PHOTO", HttpStatus.CONFLICT);
+        }
+    }
+
+    async addComment(
+        design: string | DesignEntity,
+        user: string | UserEntity,
+        ...payload: CommentInfo[]
+    ): Promise<CommentEntity> {
+        const designComment = new DesignCommentEntity();
+
+        if (typeof design == "string")
+            designComment.design = await this.getDesignById(design);
+        else designComment.design = design;
+
+        if (typeof user == "string")
+            designComment.comment = await this.commentService.addComment(
+                payload[0],
+                await this.userService.getUserById(user)
+            );
+        else
+            designComment.comment = await this.commentService.addComment(
+                payload[0],
+                user
+            );
+
+        try {
+            await this.designCommentRepo.save(designComment);
+            return designComment.getComment();
+        } catch (error) {
+            throw new HttpException(
+                "CANNOT_SAVE_DESIGN_COMMENT",
+                HttpStatus.CONFLICT
+            );
+        }
+    }
+
+    async deleteComment(id: string, user: string): Promise<string> {
+        const filter: FindOneOptions<DesignCommentEntity> = {};
+        filter.where = { comment: { id } };
+        filter.relations = { comment: { user: true } };
+        filter.select = { id: true, comment: { user: { id: true }, id: true } };
+
+        try {
+            const designComment = await this.designCommentRepo.findOneOrFail(
+                filter
+            );
+
+            if (designComment.comment.user?.id != user)
+                throw new Error("NOT_YOUR_COMMENT");
+
+            await this.designCommentRepo.softRemove(designComment);
+            return id;
+        } catch (error) {
+            throw new HttpException("COMMENT_NOT_FOUND", HttpStatus.NOT_FOUND);
         }
     }
 
