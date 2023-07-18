@@ -60,7 +60,6 @@ export class PostController {
     }
 
     @Get(":postId/comment")
-    @UseGuards(AuthGuard)
     async getComments(
         @Param("postId") postId: string
     ): Promise<ApiResponse<CommentEntity[]>> {
