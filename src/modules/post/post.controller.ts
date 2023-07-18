@@ -59,6 +59,17 @@ export class PostController {
         };
     }
 
+    @Get(":postId/comment")
+    @UseGuards(AuthGuard)
+    async getComments(
+        @Param("postId") postId: string
+    ): Promise<ApiResponse<CommentEntity[]>> {
+        return {
+            message: "COMMENT_FOUND",
+            data: await this.postService.getComments(postId),
+        };
+    }
+
     @Delete(":postId/comment/:commentId")
     @UseGuards(AuthGuard)
     async deleteComment(

@@ -205,6 +205,29 @@ export class PostService {
         }
     }
 
+    async getComments(postId: string): Promise<CommentEntity[]> {
+        postId;
+        const filter: FindManyOptions<PostCommentEntity> = {};
+        filter.select = {
+            comment: {
+                created_at: true,
+                date: true,
+                text: true,
+                id: true,
+                user: { username: true },
+            },
+        };
+        filter.relations = { comment: { user: true } };
+
+        try {
+            const postComment = await this.postCommentRepo.find(filter);
+
+            return postComment.map((item) => item.getComment());
+        } catch (error) {
+            throw new HttpException("COMMENT_NOT_FOUND", HttpStatus.NOT_FOUND);
+        }
+    }
+
     async updatePost(
         payload: PostInfo,
         user: string | UserEntity | UserIdentity
