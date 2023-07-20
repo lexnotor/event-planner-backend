@@ -2,6 +2,7 @@ import { CommentInfo, PostInfo } from "@/index";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import {
+    Equal,
     FindManyOptions,
     FindOneOptions,
     Like,
@@ -206,8 +207,8 @@ export class PostService {
     }
 
     async getComments(postId: string): Promise<CommentEntity[]> {
-        postId;
         const filter: FindManyOptions<PostCommentEntity> = {};
+        filter.where = { post: Equal(postId) };
         filter.select = {
             comment: {
                 created_at: true,
