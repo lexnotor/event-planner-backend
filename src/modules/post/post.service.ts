@@ -219,6 +219,7 @@ export class PostService {
             },
         };
         filter.relations = { comment: { user: true } };
+        filter.order = { created_at: "DESC" };
 
         try {
             const postComment = await this.postCommentRepo.find(filter);
@@ -227,6 +228,10 @@ export class PostService {
         } catch (error) {
             throw new HttpException("COMMENT_NOT_FOUND", HttpStatus.NOT_FOUND);
         }
+    }
+
+    async countPostComments(postId: string): Promise<number> {
+        return await this.postCommentRepo.countBy({ id: postId });
     }
 
     async updatePost(
