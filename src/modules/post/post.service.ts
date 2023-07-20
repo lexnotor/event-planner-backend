@@ -214,7 +214,7 @@ export class PostService {
                 date: true,
                 text: true,
                 id: true,
-                user: { username: true },
+                user: { username: true, firstname: true, lastname: true },
             },
         };
         filter.relations = { comment: { user: true } };
