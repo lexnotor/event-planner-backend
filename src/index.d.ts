@@ -113,3 +113,20 @@ export interface CommentInfo extends DefaultInfo {
     public?: boolean;
     user?: UserInfo;
 }
+
+export interface EventInfo extends DefaultInfo {
+    public: boolean;
+    price: string;
+    data: object;
+    text: string;
+    comments: string;
+    likes: number;
+    tags: string;
+    type: string;
+    location: string;
+}
+
+export interface EventPhotoInfo extends DefaultInfo {
+    event: EventInfo;
+    photo: PhotoInfo;
+}

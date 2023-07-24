@@ -1,5 +1,11 @@
 import { DefaultEntity } from "@/utils/entity";
-import { Column, Entity, JoinColumn, ManyToMany, Relation } from "typeorm";
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    Relation
+} from "typeorm";
 import { PhotoEntity } from "../photo/photo.entity";
 
 @Entity("event")
@@ -35,11 +41,11 @@ class EventEntity extends DefaultEntity {
 
 @Entity("event_photo")
 class EventPhotoEntity extends DefaultEntity {
-    @ManyToMany(() => EventEntity)
+    @ManyToOne(() => EventEntity)
     @JoinColumn({ name: "event_id" })
     event: Relation<EventEntity>;
 
-    @ManyToMany(() => PhotoEntity)
+    @ManyToOne(() => PhotoEntity)
     @JoinColumn({ name: "photo_id" })
     photo: Relation<PhotoEntity>;
 }
