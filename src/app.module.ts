@@ -11,6 +11,7 @@ import { PostModule } from "./modules/post/post.module";
 import { UploaderModule } from "./modules/uploader/uploader.module";
 import { UserModule } from "./modules/user/user.module";
 import { CommentModule } from './modules/comment/comment.module';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { CommentModule } from './modules/comment/comment.module';
         UploaderModule,
         DesignModule,
         CommentModule,
+        EventModule,
     ],
     controllers: [AppController],
     providers: [AppService],
