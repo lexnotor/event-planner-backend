@@ -1,42 +1,43 @@
 import { DefaultEntity } from "@/utils/entity";
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    Relation
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, Relation } from "typeorm";
 import { PhotoEntity } from "../photo/photo.entity";
+import { UserEntity } from "../user/user.entity";
 
 @Entity("event")
 class EventEntity extends DefaultEntity {
-    @Column()
+    @Column({ default: true })
     public: boolean;
 
-    @Column()
+    @Column({ nullable: true })
     price: string;
 
     // budget - lieu - prix
     @Column({ type: "jsonb" })
     data: object;
 
-    @Column()
+    @Column({ nullable: true })
     text: string;
 
-    @Column()
+    @Column({ nullable: false })
+    title: string;
+
+    @Column({ nullable: true })
     comments: string;
 
-    @Column()
+    @Column({ nullable: true })
     likes: number;
 
-    @Column()
+    @Column({ nullable: true })
     tags: string;
 
-    @Column()
+    @Column({ nullable: true })
     type: string;
 
-    @Column()
+    @Column({ nullable: true })
     location: string;
+
+    @ManyToOne(() => UserEntity)
+    user: Relation<UserEntity>;
 }
 
 @Entity("event_photo")

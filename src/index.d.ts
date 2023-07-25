@@ -115,15 +115,17 @@ export interface CommentInfo extends DefaultInfo {
 }
 
 export interface EventInfo extends DefaultInfo {
-    public: boolean;
-    price: string;
-    data: object;
-    text: string;
-    comments: string;
-    likes: number;
-    tags: string;
-    type: string;
-    location: string;
+    public?: boolean;
+    price?: string;
+    title?: string;
+    data?: object;
+    text?: string;
+    comments?: string;
+    likes?: number;
+    tags?: string;
+    type?: string;
+    location?: string;
+    user?: UserInfo;
 }
 
 export interface EventPhotoInfo extends DefaultInfo {
