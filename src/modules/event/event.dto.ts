@@ -1,6 +1,5 @@
 import {
     IsBoolean,
-    IsEmpty,
     IsNotEmpty,
     IsOptional,
     IsString,
@@ -25,10 +24,10 @@ class CreateEventDto {
     @IsString()
     text?: string;
 
-    @IsEmpty()
+    @IsNotEmpty()
     @IsString()
     @MinLength(3)
-    title?: string;
+    title: string;
 
     @IsOptional()
     @IsString()
@@ -113,8 +112,11 @@ class QueryEventDto {
 
     @IsOptional()
     @IsString()
-    @IsUUID()
     text?: string;
+
+    @IsOptional()
+    @IsString()
+    title?: string;
 }
 
 export { CreateEventDto, QueryEventDto, QueryUpdateEventDto, UpdateEventDto };

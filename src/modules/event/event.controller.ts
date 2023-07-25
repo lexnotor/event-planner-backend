@@ -40,7 +40,6 @@ export class EventController {
     }
 
     @Get("find")
-    @UseGuards(AuthGuard)
     async findEvent(
         @Query() query: QueryEventDto
     ): Promise<ApiResponse<EventInfo | EventInfo[]>> {

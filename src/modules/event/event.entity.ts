@@ -12,7 +12,7 @@ class EventEntity extends DefaultEntity {
     price: string;
 
     // budget - lieu - prix
-    @Column({ type: "jsonb" })
+    @Column({ type: "jsonb", nullable: true })
     data: object;
 
     @Column({ nullable: true })

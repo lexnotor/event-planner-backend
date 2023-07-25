@@ -130,18 +130,7 @@ export class EventService {
         const filter: FindOneOptions<EventEntity> = {};
         filter.where = { id: Equal(eventId) };
         filter.relations = { user: true };
-        filter.select = {
-            comments: true,
-            created_at: true,
-            id: true,
-            likes: true,
-            type: true,
-            price: true,
-            location: true,
-            text: true,
-            title: true,
-            user: { username: true, id: true },
-        };
+        filter.select = this.EVENT_FIND_ONE_SELECT_FULL;
 
         try {
             const event = await this.eventRepo.findOneOrFail(filter);
@@ -157,17 +146,7 @@ export class EventService {
             user: Equal(userId),
         };
 
-        filter.select = {
-            comments: true,
-            created_at: true,
-            id: true,
-            likes: true,
-            type: true,
-            price: true,
-            location: true,
-            text: true,
-            title: true,
-        };
+        filter.select = this.EVENT_FIND_ONE_SELECT_IMPORTANT;
 
         filter.order = { created_at: "DESC" };
 
@@ -185,7 +164,10 @@ export class EventService {
         const filter: FindManyOptions<EventEntity> = {};
 
         filter.select = this.EVENT_FIND_ONE_SELECT_IMPORTANT;
-        filter.where = { text: Like(`%${payload.text}`) };
+        filter.where = {
+            text: Like(`%${payload.text ?? ""}%`),
+            title: Like(`%${payload.title ?? ""}%`),
+        };
         filter.order = { created_at: "DESC" };
         filter.relations = { user: true };
 
