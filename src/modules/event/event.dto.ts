@@ -1,8 +1,10 @@
 import {
     IsBoolean,
     IsEmpty,
+    IsNotEmpty,
     IsOptional,
     IsString,
+    IsUUID,
     MinLength,
 } from "class-validator";
 
@@ -91,4 +93,28 @@ class UpdateEventDto {
     location?: string;
 }
 
-export { CreateEventDto, UpdateEventDto };
+class QueryUpdateEventDto {
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    user: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsUUID()
+    event: string;
+}
+
+class QueryEventDto {
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    id?: string;
+
+    @IsOptional()
+    @IsString()
+    @IsUUID()
+    text?: string;
+}
+
+export { CreateEventDto, QueryEventDto, QueryUpdateEventDto, UpdateEventDto };

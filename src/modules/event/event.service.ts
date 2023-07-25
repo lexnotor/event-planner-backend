@@ -1,13 +1,59 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Equal, FindManyOptions, FindOneOptions, Repository } from "typeorm";
+import {
+    Equal,
+    FindManyOptions,
+    FindOneOptions,
+    FindOptionsSelect,
+    Like,
+    Repository,
+} from "typeorm";
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
-import { CreateEventDto, UpdateEventDto } from "./event.dto";
+import { CreateEventDto, QueryEventDto, UpdateEventDto } from "./event.dto";
 import { EventEntity, EventPhotoEntity } from "./event.entity";
 
 @Injectable()
 export class EventService {
+    EVENT_FIND_ONE_SELECT_FULL: FindOptionsSelect<EventEntity> = {
+        comments: true,
+        created_at: true,
+        data: {},
+        id: true,
+        likes: true,
+        deleted_at: true,
+        location: true,
+        price: true,
+        public: true,
+        tags: true,
+        text: true,
+        title: true,
+        type: true,
+        updated_at: true,
+        user: { username: true, id: true, firstname: true, lastname: true },
+    };
+
+    EVENT_FIND_ONE_SELECT_IMPORTANT: FindOptionsSelect<EventEntity> = {
+        created_at: true,
+        id: true,
+        public: true,
+        text: true,
+        title: true,
+        type: true,
+        updated_at: true,
+        user: { username: true, id: true, firstname: true, lastname: true },
+    };
+
+    EVENT_FIND_ONE_SELECT_MINIMAL: FindOptionsSelect<EventEntity> = {
+        id: true,
+        title: true,
+        created_at: true,
+        public: true,
+        text: true,
+        type: true,
+        user: { username: true, id: true, firstname: true, lastname: true },
+    };
+
     constructor(
         @InjectRepository(EventEntity)
         private readonly eventRepo: Repository<EventEntity>,
@@ -132,6 +178,22 @@ export class EventService {
             return events;
         } catch (error) {
             throw new HttpException("NO_EVENT", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    async getEvents(payload: QueryEventDto): Promise<EventEntity[]> {
+        const filter: FindManyOptions<EventEntity> = {};
+
+        filter.select = this.EVENT_FIND_ONE_SELECT_IMPORTANT;
+        filter.where = { text: Like(`%${payload.text}`) };
+        filter.order = { created_at: "DESC" };
+        filter.relations = { user: true };
+
+        try {
+            const events = await this.eventRepo.find(filter);
+            return events;
+        } catch (error) {
+            throw new HttpException("NOT_EVENT", HttpStatus.FORBIDDEN);
         }
     }
 
