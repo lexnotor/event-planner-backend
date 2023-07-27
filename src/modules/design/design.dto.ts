@@ -1,41 +1,45 @@
-import { Type } from "class-transformer";
 import {
     IsBoolean,
     IsDate,
-    IsDateString,
+    IsJSON,
     IsNotEmpty,
     IsOptional,
     IsString,
     MinLength,
 } from "class-validator";
-class CreatePostDto {
+
+class CreateDesignDto {
     @IsNotEmpty()
     @IsString()
-    author: string;
+    @MinLength(3)
+    text: string;
 
-    @IsDate()
-    @Type(() => Date)
+    @IsString()
     @IsOptional()
-    date = new Date();
+    price = "free";
 
-    @IsOptional()
     @IsBoolean()
+    @IsOptional()
     public = true;
 
     @IsString()
     @IsOptional()
     tags = "";
 
+    @IsJSON()
+    @IsString()
+    @IsOptional()
+    data = "{}";
+}
+class UpdateDesignDto {
     @IsString()
     @MinLength(3)
-    text: string;
-}
-
-class UpdatePostDto {
-    @IsDateString()
     @IsOptional()
-    @Type(() => Date)
-    date: Date;
+    text: string;
+
+    @IsString()
+    @IsOptional()
+    price: string;
 
     @IsBoolean()
     @IsOptional()
@@ -45,12 +49,12 @@ class UpdatePostDto {
     @IsOptional()
     tags: string;
 
+    @IsJSON()
     @IsString()
     @IsOptional()
-    text: string;
+    data: string;
 }
-
-class AddCommentPostDto {
+class AddCommentDesignDto {
     @IsNotEmpty()
     @IsString()
     @MinLength(3)
@@ -61,4 +65,4 @@ class AddCommentPostDto {
     date: Date;
 }
 
-export { CreatePostDto, UpdatePostDto, AddCommentPostDto };
+export { CreateDesignDto, UpdateDesignDto, AddCommentDesignDto };

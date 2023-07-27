@@ -3,12 +3,15 @@ import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
+import { AuthModule } from "./modules/auth/auth.module";
 import { DbconfigService } from "./modules/dbconfig/dbconfig.service";
+import { DesignModule } from "./modules/design/design.module";
 import { PhotoModule } from "./modules/photo/photo.module";
 import { PostModule } from "./modules/post/post.module";
-import { UserModule } from "./modules/user/user.module";
-import { AuthModule } from "./modules/auth/auth.module";
 import { UploaderModule } from "./modules/uploader/uploader.module";
+import { UserModule } from "./modules/user/user.module";
+import { CommentModule } from './modules/comment/comment.module';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
     imports: [
@@ -22,6 +25,9 @@ import { UploaderModule } from "./modules/uploader/uploader.module";
         PhotoModule,
         AuthModule,
         UploaderModule,
+        DesignModule,
+        CommentModule,
+        EventModule,
     ],
     controllers: [AppController],
     providers: [AppService],

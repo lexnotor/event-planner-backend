@@ -4,23 +4,27 @@ import { AuthModule } from "../auth/auth.module";
 import { CommentModule } from "../comment/comment.module";
 import { PhotoModule } from "../photo/photo.module";
 import { UserModule } from "../user/user.module";
-import { PostController } from "./post.controller";
-import { PostCommentEntity, PostEntity, PostPhotoEntity } from "./post.entity";
-import { PostService } from "./post.service";
+import { DesignController } from "./design.controller";
+import {
+    DesignCommentEntity,
+    DesignEntity,
+    DesignPhotoEntity,
+} from "./design.entity";
+import { DesignService } from "./design.service";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([
-            PostEntity,
-            PostPhotoEntity,
-            PostCommentEntity,
+            DesignEntity,
+            DesignPhotoEntity,
+            DesignCommentEntity,
         ]),
         UserModule,
         PhotoModule,
         AuthModule,
         CommentModule,
     ],
-    controllers: [PostController],
-    providers: [PostService],
+    controllers: [DesignController],
+    providers: [DesignService],
 })
-export class PostModule {}
+export class DesignModule {}
