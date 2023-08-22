@@ -7,6 +7,7 @@ import { UserModule } from "../user/user.module";
 import { EventController } from "./event.controller";
 import { EventEntity, EventPhotoEntity } from "./event.entity";
 import { EventService } from "./event.service";
+import { EventGigService } from "./event_gig.service";
 
 @Module({
     imports: [
@@ -17,6 +18,6 @@ import { EventService } from "./event.service";
         UserModule,
     ],
     controllers: [EventController],
-    providers: [EventService],
+    providers: [EventService, EventGigService],
 })
 export class EventModule {}

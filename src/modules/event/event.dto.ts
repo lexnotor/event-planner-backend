@@ -119,4 +119,43 @@ class QueryEventDto {
     title?: string;
 }
 
-export { CreateEventDto, QueryEventDto, QueryUpdateEventDto, UpdateEventDto };
+class AddGigToEventDto {
+    @IsNotEmpty()
+    @IsUUID()
+    eventId: string;
+
+    @IsOptional()
+    @IsUUID()
+    gigId?: string;
+
+    @IsNotEmpty()
+    @MinLength(3)
+    title: string;
+
+    @IsOptional()
+    @MinLength(3)
+    details?: string;
+}
+
+class UpdateEventGigDto {
+    @IsOptional()
+    @IsUUID()
+    gigId?: string;
+
+    @IsOptional()
+    @MinLength(3)
+    title?: string;
+
+    @IsOptional()
+    @MinLength(3)
+    details?: string;
+}
+
+export {
+    AddGigToEventDto,
+    CreateEventDto,
+    QueryEventDto,
+    QueryUpdateEventDto,
+    UpdateEventDto,
+    UpdateEventGigDto,
+};
