@@ -11,7 +11,7 @@ import {
 import { UserEntity } from "../user/user.entity";
 import { UserService } from "../user/user.service";
 import { CreateEventDto, QueryEventDto, UpdateEventDto } from "./event.dto";
-import { EventEntity, EventPhotoEntity } from "./event.entity";
+import { EventEntity } from "./event.entity";
 
 @Injectable()
 export class EventService {
@@ -22,7 +22,6 @@ export class EventService {
         id: true,
         likes: true,
         deleted_at: true,
-        location: true,
         price: true,
         public: true,
         tags: true,
@@ -57,8 +56,6 @@ export class EventService {
     constructor(
         @InjectRepository(EventEntity)
         private readonly eventRepo: Repository<EventEntity>,
-        @InjectRepository(EventPhotoEntity)
-        private readonly eventPhotoEntity: Repository<EventPhotoEntity>,
         private readonly userService: UserService
     ) {}
 
@@ -70,7 +67,6 @@ export class EventService {
         event.comments = payload.comments ?? null;
         event.data = payload.data ?? null;
         event.likes = payload.likes ?? null;
-        event.location = payload.location ?? null;
         event.price = payload.price ?? null;
         event.public = payload.public;
         event.text = payload.text ?? null;
@@ -106,7 +102,6 @@ export class EventService {
         event.comments = payload.comments ?? event.comments;
         event.data = payload.data ?? event.data;
         event.likes = payload.likes ?? event.likes;
-        event.location = payload.location ?? event.location;
         event.price = payload.price ?? event.price;
         event.public = payload.public ?? event.public;
         event.text = payload.text ?? event.text;

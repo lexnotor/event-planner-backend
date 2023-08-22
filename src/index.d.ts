@@ -114,6 +114,15 @@ export interface CommentInfo extends DefaultInfo {
     user?: UserInfo;
 }
 
+export interface GigInfo extends DefaultInfo {
+    type?: string;
+    title?: string;
+    text?: string;
+    tags?: string;
+    likes?: number;
+    user?: UserInfo;
+}
+
 export interface EventInfo extends DefaultInfo {
     public?: boolean;
     price?: string;
@@ -129,6 +138,19 @@ export interface EventInfo extends DefaultInfo {
 }
 
 export interface EventPhotoInfo extends DefaultInfo {
-    event: EventInfo;
-    photo: PhotoInfo;
+    event?: EventInfo;
+    photo?: PhotoInfo;
+}
+
+export interface EventCommentInfo extends DefaultInfo {
+    event?: EventInfo;
+    comment?: CommentInfo;
+}
+
+export interface EventGigInfo extends DefaultInfo {
+    event?: EventInfo;
+    gig?: GigInfo;
+    title?: string;
+    details?: string;
+    confirm?: boolean;
 }
