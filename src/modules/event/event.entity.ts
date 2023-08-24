@@ -20,6 +20,9 @@ class EventEntity extends DefaultEntity {
     @Column({ nullable: true })
     text: string;
 
+    @Column("timestamp", { nullable: true })
+    date: Date;
+
     @Column({ nullable: false })
     title: string;
 

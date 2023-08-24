@@ -1,5 +1,6 @@
 import {
     IsBoolean,
+    IsDateString,
     IsNotEmpty,
     IsOptional,
     IsString,
@@ -19,6 +20,10 @@ class CreateEventDto {
     @IsOptional()
     @IsString()
     data?: object;
+
+    @IsOptional()
+    @IsDateString()
+    date?: string;
 
     @IsOptional()
     @IsString()
@@ -61,6 +66,10 @@ class UpdateEventDto {
     @IsOptional()
     @IsString()
     data?: object;
+
+    @IsOptional()
+    @IsDateString()
+    date?: string;
 
     @IsOptional()
     @IsString()
@@ -151,6 +160,20 @@ class UpdateEventGigDto {
     details?: string;
 }
 
+class FindEventGigDto {
+    @IsOptional()
+    @IsUUID()
+    eventId?: string;
+
+    @IsOptional()
+    @IsUUID()
+    gigId?: string;
+
+    @IsOptional()
+    @IsUUID()
+    eventGigId?: string;
+}
+
 export {
     AddGigToEventDto,
     CreateEventDto,
@@ -158,4 +181,5 @@ export {
     QueryUpdateEventDto,
     UpdateEventDto,
     UpdateEventGigDto,
+    FindEventGigDto,
 };

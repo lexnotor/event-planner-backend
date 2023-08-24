@@ -15,6 +15,7 @@ import { EventService } from "./event.service";
 import {
     AddGigToEventDto,
     CreateEventDto,
+    FindEventGigDto,
     QueryEventDto,
     QueryUpdateEventDto,
     UpdateEventDto,
@@ -149,6 +150,24 @@ export class EventController {
         return {
             message: "GIG_ADDED",
             data: eventGig,
+        };
+    }
+
+    @Get("gig")
+    @UseGuards(AuthGuard)
+    async findEventGig(
+        @Query() query: FindEventGigDto
+    ): Promise<ApiResponse<EventGigEntity | EventGigEntity[]>> {
+        const { eventGigId, eventId } = query;
+        const eventGigs = eventId
+            ? await this.eventGigService.getEventGigs(eventId)
+            : eventGigId
+            ? await this.eventGigService.getEventGigById(eventGigId)
+            : [];
+
+        return {
+            message: "GIG_FOUND",
+            data: eventGigs,
         };
     }
 

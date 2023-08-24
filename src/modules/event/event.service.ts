@@ -66,6 +66,7 @@ export class EventService {
         const event = new EventEntity();
         event.comments = payload.comments ?? null;
         event.data = payload.data ?? null;
+        event.date = payload.date ? new Date(payload.date) : null;
         event.likes = payload.likes ?? null;
         event.price = payload.price ?? null;
         event.public = payload.public;
