@@ -82,7 +82,7 @@ export class EventGigService {
             );
         }
 
-        return eventGig;
+        return await this.getEventGigById(eventGig.id);
     }
 
     async deleteEventGig(eventGigId: string): Promise<string> {

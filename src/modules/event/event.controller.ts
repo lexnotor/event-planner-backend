@@ -54,7 +54,7 @@ export class EventController {
         @Query() query: QueryEventDto
     ): Promise<ApiResponse<EventInfo | EventInfo[]>> {
         const { id } = query;
-        if (typeof id != "undefined")
+        if (id)
             return {
                 message: "EVENT_FOUND",
                 data: await this.eventService.getEventById(id),
