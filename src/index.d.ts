@@ -128,6 +128,7 @@ export interface EventInfo extends DefaultInfo {
     price?: string;
     title?: string;
     data?: object;
+    date?: string | Date;
     text?: string;
     comments?: string;
     likes?: number;

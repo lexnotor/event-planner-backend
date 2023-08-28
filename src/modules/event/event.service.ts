@@ -27,6 +27,8 @@ export class EventService {
         tags: true,
         text: true,
         title: true,
+        location: true,
+        date: true,
         type: true,
         updated_at: true,
         user: { username: true, id: true, firstname: true, lastname: true },
@@ -66,12 +68,14 @@ export class EventService {
         const event = new EventEntity();
         event.comments = payload.comments ?? null;
         event.data = payload.data ?? null;
+        event.date = payload.date ? new Date(payload.date) : null;
         event.likes = payload.likes ?? null;
         event.price = payload.price ?? null;
         event.public = payload.public;
         event.text = payload.text ?? null;
         event.title = payload.title ?? null;
         event.tags = payload.tags ?? null;
+        event.location = payload.location ?? null;
         event.type = payload.type ?? null;
 
         if (typeof user == "string")
@@ -141,7 +145,7 @@ export class EventService {
             user: Equal(userId),
         };
 
-        filter.select = this.EVENT_FIND_ONE_SELECT_IMPORTANT;
+        filter.select = this.EVENT_FIND_ONE_SELECT_FULL;
 
         filter.order = { created_at: "DESC" };
 
@@ -158,7 +162,7 @@ export class EventService {
     async getEvents(payload: QueryEventDto): Promise<EventEntity[]> {
         const filter: FindManyOptions<EventEntity> = {};
 
-        filter.select = this.EVENT_FIND_ONE_SELECT_IMPORTANT;
+        filter.select = this.EVENT_FIND_ONE_SELECT_FULL;
         filter.where = {
             text: Like(`%${payload.text ?? ""}%`),
             title: Like(`%${payload.title ?? ""}%`),
