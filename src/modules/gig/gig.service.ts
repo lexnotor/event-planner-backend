@@ -107,6 +107,31 @@ export class GigService {
         return gigs;
     }
 
+    async getUserGigs(userId: string): Promise<GigEntity[]> {
+        let gigs: GigEntity[];
+
+        const filter: FindManyOptions<GigEntity> = {};
+        filter.where = [{ user: Equal(userId) }];
+
+        filter.relations = { user: true };
+        filter.select = {
+            id: true,
+            created_at: true,
+            tags: true,
+            text: true,
+            title: true,
+            type: true,
+        };
+
+        try {
+            gigs = await this.gigRepo.find(filter);
+        } catch (error) {
+            throw new HttpException("NO_GIG_FOUND", HttpStatus.NOT_FOUND);
+        }
+
+        return gigs;
+    }
+
     async deleteGig(gigId: string): Promise<string> {
         const gig = await this.getGigById(gigId);
 

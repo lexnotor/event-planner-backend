@@ -24,7 +24,7 @@ export class GigController {
         private readonly userService: UserService
     ) {}
 
-    @Post()
+    @Post("new")
     @UseGuards(AuthGuard)
     async addGig(
         @Body() payload: CreateGigDto,
@@ -45,6 +45,8 @@ export class GigController {
     ): Promise<ApiResponse<GigEntity[] | GigEntity>> {
         const gigs = query.id
             ? await this.gigService.getGigById(query.id)
+            : query.userId
+            ? await this.gigService.getUserGigs(query.userId)
             : await this.gigService.getGigs(query.text);
 
         return {

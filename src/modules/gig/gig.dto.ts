@@ -70,6 +70,10 @@ class FindGigQueryDto {
     @IsOptional()
     @IsString()
     text?: string;
+
+    @IsOptional()
+    @IsUUID()
+    userId?: string;
 }
 
 export { CreateGigDto, FindGigQueryDto, UpdateGigDto };
